@@ -54,7 +54,7 @@ All colors MUST be HSL.
     /* Food app specific tokens */
     --card-hover: 14 91% 97%;
     --badge-open: 145 65% 45%;
-    --badge-closed: 0 0% 60%;
+    --badge-closed: 0 72% 55%;
     --skeleton: 30 15% 92%;
 
     /* Transitions */
@@ -98,7 +98,7 @@ All colors MUST be HSL.
 
     --card-hover: 24 12% 12%;
     --badge-open: 145 65% 45%;
-    --badge-closed: 0 0% 40%;
+    --badge-closed: 0 70% 50%;
     --skeleton: 24 10% 15%;
   }
 }

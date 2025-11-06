@@ -47,7 +47,7 @@ const RestaurantCard = ({ restaurant }: RestaurantCardProps) => {
         />
         {!restaurant.isOpen && (
           <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
-            <Badge variant="secondary" className={`${isLargeText ? 'text-2xl px-6 py-3' : 'text-lg px-4 py-2'} bg-badge-closed`}>
+            <Badge variant="secondary" className={`${isLargeText ? 'text-2xl px-6 py-3' : 'text-lg px-4 py-2'} bg-badge-closed text-white`}>
               {isIconFocused ? '🔒 Closed' : 'CLOSED'}
             </Badge>
           </div>

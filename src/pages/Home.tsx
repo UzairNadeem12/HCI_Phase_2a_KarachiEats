@@ -6,6 +6,7 @@ import { Search, MapPin, SlidersHorizontal, ShoppingCart } from 'lucide-react';
 import RestaurantCard from '@/components/RestaurantCard';
 import CartButton from '@/components/CartButton';
 import LocationPicker from '@/components/LocationPicker';
+import FiltersSheet, { FilterState } from '@/components/FiltersSheet';
 
 // Dummy restaurant data
 const restaurants = [
@@ -74,16 +75,28 @@ const restaurants = [
 const Home = () => {
   const { location, userGroup } = useApp();
   const [searchQuery, setSearchQuery] = useState('');
-  const [showFilters, setShowFilters] = useState(false);
   const [showLocationPicker, setShowLocationPicker] = useState(false);
+  const [filters, setFilters] = useState<FilterState>({
+    cuisine: 'All',
+    maxDeliveryFee: 150,
+    minRating: 0,
+    showClosedOnly: false,
+  });
 
   const isLargeText = userGroup === 'senior' || userGroup === 'disability';
   const isIconFocused = userGroup === 'lowLiteracy';
 
-  const filteredRestaurants = restaurants.filter(r => 
-    r.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    r.cuisine.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredRestaurants = restaurants.filter(r => {
+    const matchesSearch = r.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      r.cuisine.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    const matchesCuisine = filters.cuisine === 'All' || r.cuisine.includes(filters.cuisine);
+    const matchesDeliveryFee = r.deliveryFee <= filters.maxDeliveryFee;
+    const matchesRating = r.rating >= filters.minRating;
+    const matchesOpenStatus = filters.showClosedOnly || r.isOpen;
+
+    return matchesSearch && matchesCuisine && matchesDeliveryFee && matchesRating && matchesOpenStatus;
+  });
 
   return (
     <div className="min-h-screen bg-background">
@@ -115,14 +128,7 @@ const Home = () => {
                 className={`pl-10 ${isLargeText ? 'h-14 text-lg' : 'h-12'}`}
               />
             </div>
-            <Button
-              variant="outline"
-              size={isLargeText ? "lg" : "default"}
-              onClick={() => setShowFilters(!showFilters)}
-            >
-              <SlidersHorizontal className="w-5 h-5" />
-              {!isIconFocused && <span className="ml-2 hidden sm:inline">Filters</span>}
-            </Button>
+            <FiltersSheet filters={filters} onFiltersChange={setFilters} />
           </div>
         </div>
       </header>

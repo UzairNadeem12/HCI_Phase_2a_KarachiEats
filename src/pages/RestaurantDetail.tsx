@@ -7,22 +7,26 @@ import { ArrowLeft, Star, Clock, Bike, Plus, Minus } from 'lucide-react';
 import { useState } from 'react';
 import CartButton from '@/components/CartButton';
 
+import raitaImg from '@/assets/raita.jpg';
+import naanImg from '@/assets/naan.jpg';
+import garlicBreadImg from '@/assets/garlic-bread.jpg';
+
 // Dummy menu data
 const menuItems = {
   '1': [
     { id: 'm1', name: 'Chicken Biryani', price: 350, image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=400', description: 'Aromatic rice with tender chicken' },
     { id: 'm2', name: 'Mutton Biryani', price: 450, image: 'https://images.unsplash.com/photo-1599043513900-ed6fe01d3833?w=400', description: 'Rich and flavorful mutton biryani' },
-    { id: 'm3', name: 'Raita', price: 80, image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?w=400', description: 'Cooling yogurt side dish' },
+    { id: 'm3', name: 'Raita', price: 80, image: raitaImg, description: 'Cooling yogurt side dish' },
   ],
   '2': [
     { id: 'm4', name: 'Margherita Pizza', price: 600, image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400', description: 'Classic tomato and mozzarella' },
     { id: 'm5', name: 'Pepperoni Pizza', price: 750, image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?w=400', description: 'Loaded with pepperoni' },
-    { id: 'm6', name: 'Garlic Bread', price: 200, image: 'https://images.unsplash.com/photo-1573140401552-3fab0b24f0ab?w=400', description: 'Crispy garlic bread sticks' },
+    { id: 'm6', name: 'Garlic Bread', price: 200, image: garlicBreadImg, description: 'Crispy garlic bread sticks' },
   ],
   '4': [
     { id: 'm7', name: 'Seekh Kebab', price: 280, image: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400', description: 'Grilled minced meat skewers' },
     { id: 'm8', name: 'Chicken Tikka', price: 320, image: 'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?w=400', description: 'Marinated grilled chicken' },
-    { id: 'm9', name: 'Naan', price: 40, image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?w=400', description: 'Fresh tandoor bread' },
+    { id: 'm9', name: 'Naan', price: 40, image: naanImg, description: 'Fresh tandoor bread' },
   ],
   '5': [
     { id: 'm10', name: 'Classic Burger', price: 350, image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400', description: 'Beef patty with cheese' },
@@ -59,6 +63,7 @@ const RestaurantDetail = () => {
         price: item.price,
         restaurantId: id || '1',
         image: item.image,
+        deliveryFee: restaurant.deliveryFee,
       });
     }
     setQuantities(prev => ({ ...prev, [item.id]: 1 }));
@@ -121,11 +126,11 @@ const RestaurantDetail = () => {
         <div className="space-y-4">
           {menu.map(item => (
             <Card key={item.id} className="p-4 hover:shadow-md transition-shadow">
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-4">
                 <img 
                   src={item.image} 
                   alt={item.name}
-                  className={`${isLargeText ? 'w-32 h-32' : 'w-24 h-24'} object-cover rounded-lg flex-shrink-0`}
+                  className={`${isLargeText ? 'w-full sm:w-32 h-32' : 'w-full sm:w-24 h-24'} object-cover rounded-lg flex-shrink-0`}
                 />
                 <div className="flex-1 min-w-0">
                   <h3 className={`font-semibold ${isLargeText ? 'text-2xl' : 'text-lg'} mb-1`}>
@@ -138,30 +143,32 @@ const RestaurantDetail = () => {
                     Rs. {item.price}
                   </p>
                 </div>
-                <div className="flex flex-col items-end justify-between">
+                <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-between gap-3">
                   <div className="flex items-center gap-2">
                     <Button
                       variant="outline"
-                      size={isLargeText ? "lg" : "icon"}
+                      size={isLargeText ? "default" : "icon"}
                       onClick={() => updateQuantity(item.id, -1)}
+                      className={isLargeText ? 'h-12 w-12' : ''}
                     >
                       <Minus className={`${isLargeText ? 'w-5 h-5' : 'w-4 h-4'}`} />
                     </Button>
-                    <span className={`w-8 text-center font-medium ${isLargeText ? 'text-xl' : ''}`}>
+                    <span className={`min-w-[2rem] text-center font-medium ${isLargeText ? 'text-xl' : ''}`}>
                       {quantities[item.id] || 1}
                     </span>
                     <Button
                       variant="outline"
-                      size={isLargeText ? "lg" : "icon"}
+                      size={isLargeText ? "default" : "icon"}
                       onClick={() => updateQuantity(item.id, 1)}
+                      className={isLargeText ? 'h-12 w-12' : ''}
                     >
                       <Plus className={`${isLargeText ? 'w-5 h-5' : 'w-4 h-4'}`} />
                     </Button>
                   </div>
                   <Button 
                     onClick={() => handleAddToCart(item)}
-                    size={isLargeText ? "lg" : "default"}
-                    className="mt-2"
+                    size={isLargeText ? "default" : "default"}
+                    className={`${isLargeText ? 'h-12 px-6' : ''} whitespace-nowrap`}
                   >
                     {isIconFocused ? '🛒 Add' : 'Add to Cart'}
                   </Button>

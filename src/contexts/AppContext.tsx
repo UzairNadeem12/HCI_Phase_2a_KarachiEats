@@ -9,6 +9,7 @@ export interface CartItem {
   quantity: number;
   restaurantId: string;
   image?: string;
+  deliveryFee?: number;
 }
 
 interface AppContextType {

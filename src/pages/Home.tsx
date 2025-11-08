@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Search, MapPin, SlidersHorizontal, ShoppingCart } from 'lucide-react';
 import RestaurantCard from '@/components/RestaurantCard';
 import CartButton from '@/components/CartButton';
+import LocationPicker from '@/components/LocationPicker';
 
 // Dummy restaurant data
 const restaurants = [
@@ -74,9 +75,15 @@ const Home = () => {
   const { location, userGroup } = useApp();
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
+  const [showLocationPicker, setShowLocationPicker] = useState(false);
 
   const isLargeText = userGroup === 'senior' || userGroup === 'disability';
   const isIconFocused = userGroup === 'lowLiteracy';
+
+  const filteredRestaurants = restaurants.filter(r => 
+    r.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    r.cuisine.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen bg-background">
@@ -84,12 +91,15 @@ const Home = () => {
       <header className="bg-card border-b border-border sticky top-0 z-40 shadow-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
+            <button 
+              onClick={() => setShowLocationPicker(true)}
+              className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+            >
               <MapPin className="w-5 h-5 text-primary" />
               <span className={`font-medium ${isLargeText ? 'text-lg' : 'text-sm'}`}>
                 {location}
               </span>
-            </div>
+            </button>
             <CartButton />
           </div>
 
@@ -130,16 +140,21 @@ const Home = () => {
 
         {/* Restaurant Grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-          {restaurants
-            .filter(r => 
-              r.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              r.cuisine.toLowerCase().includes(searchQuery.toLowerCase())
-            )
-            .map(restaurant => (
+          {filteredRestaurants.length > 0 ? (
+            filteredRestaurants.map(restaurant => (
               <RestaurantCard key={restaurant.id} restaurant={restaurant} />
-            ))}
+            ))
+          ) : (
+            <div className="col-span-full text-center py-12">
+              <p className={`text-muted-foreground ${isLargeText ? 'text-lg' : ''}`}>
+                No restaurants found
+              </p>
+            </div>
+          )}
         </div>
       </main>
+      
+      <LocationPicker open={showLocationPicker} onClose={() => setShowLocationPicker(false)} />
     </div>
   );
 };

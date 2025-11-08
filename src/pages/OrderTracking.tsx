@@ -3,21 +3,41 @@ import { useApp } from '@/contexts/AppContext';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Phone, MessageSquare, MapPin, CheckCircle2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 const OrderTracking = () => {
   const navigate = useNavigate();
   const { orderId } = useParams();
   const { userGroup } = useApp();
+  const [currentStep, setCurrentStep] = useState(0);
 
   const isLargeText = userGroup === 'senior' || userGroup === 'disability';
   const isIconFocused = userGroup === 'lowLiteracy';
 
-  const orderSteps = [
-    { label: 'Order Confirmed', icon: '✓', completed: true },
-    { label: 'Preparing Food', icon: '🍳', completed: true },
-    { label: 'Out for Delivery', icon: '🚴', completed: true },
-    { label: 'Delivered', icon: '✅', completed: false },
+  const allSteps = [
+    { label: 'Order Confirmed', icon: '✓' },
+    { label: 'Preparing Food', icon: '🍳' },
+    { label: 'Out for Delivery', icon: '🚴' },
+    { label: 'Delivered', icon: '✅' },
   ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentStep(prev => {
+        if (prev < allSteps.length - 1) {
+          return prev + 1;
+        }
+        return prev;
+      });
+    }, 10000); // Change status every 10 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const orderSteps = allSteps.map((step, index) => ({
+    ...step,
+    completed: index <= currentStep,
+  }));
 
   return (
     <div className="min-h-screen bg-background">

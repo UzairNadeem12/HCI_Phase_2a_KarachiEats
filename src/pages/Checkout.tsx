@@ -13,18 +13,23 @@ const Checkout = () => {
   const { cart, updateQuantity, removeFromCart, cartTotal, clearCart, userGroup } = useApp();
   const [paymentMethod, setPaymentMethod] = useState('cash');
   const [isScheduled, setIsScheduled] = useState(false);
+  const [scheduledTime, setScheduledTime] = useState('');
   const [guestName, setGuestName] = useState('');
   const [guestPhone, setGuestPhone] = useState('');
 
   const isLargeText = userGroup === 'senior' || userGroup === 'disability';
   const isIconFocused = userGroup === 'lowLiteracy';
 
-  const deliveryFee = 60;
+  const deliveryFee = cart[0]?.deliveryFee || 60;
   const total = cartTotal + deliveryFee;
 
   const handlePlaceOrder = () => {
     if (!guestName || !guestPhone) {
       alert('Please fill in your contact details');
+      return;
+    }
+    if (isScheduled && !scheduledTime) {
+      alert('Please select a delivery time');
       return;
     }
     clearCart();
@@ -109,31 +114,34 @@ const Checkout = () => {
                     Rs. {item.price}
                   </p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 sm:gap-2">
                   <Button
                     variant="outline"
-                    size={isLargeText ? "lg" : "icon"}
+                    size={isLargeText ? "default" : "icon"}
                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                    className={isLargeText ? 'h-10 w-10 sm:h-12 sm:w-12' : ''}
                   >
-                    <Minus className={`${isLargeText ? 'w-5 h-5' : 'w-4 h-4'}`} />
+                    <Minus className={`${isLargeText ? 'w-4 h-4 sm:w-5 sm:h-5' : 'w-4 h-4'}`} />
                   </Button>
-                  <span className={`w-8 text-center font-medium ${isLargeText ? 'text-xl' : ''}`}>
+                  <span className={`min-w-[2rem] text-center font-medium ${isLargeText ? 'text-lg sm:text-xl' : ''}`}>
                     {item.quantity}
                   </span>
                   <Button
                     variant="outline"
-                    size={isLargeText ? "lg" : "icon"}
+                    size={isLargeText ? "default" : "icon"}
                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                    className={isLargeText ? 'h-10 w-10 sm:h-12 sm:w-12' : ''}
                   >
-                    <Plus className={`${isLargeText ? 'w-5 h-5' : 'w-4 h-4'}`} />
+                    <Plus className={`${isLargeText ? 'w-4 h-4 sm:w-5 sm:h-5' : 'w-4 h-4'}`} />
                   </Button>
                 </div>
                 <Button
                   variant="ghost"
-                  size={isLargeText ? "lg" : "icon"}
+                  size={isLargeText ? "default" : "icon"}
                   onClick={() => removeFromCart(item.id)}
+                  className={isLargeText ? 'h-10 w-10 sm:h-12 sm:w-12' : ''}
                 >
-                  <Trash2 className={`${isLargeText ? 'w-5 h-5' : 'w-4 h-4'} text-destructive`} />
+                  <Trash2 className={`${isLargeText ? 'w-4 h-4 sm:w-5 sm:h-5' : 'w-4 h-4'} text-destructive`} />
                 </Button>
               </div>
             ))}
@@ -158,6 +166,20 @@ const Checkout = () => {
               <Label htmlFor="later" className={isLargeText ? 'text-lg' : ''}>Schedule for Later</Label>
             </div>
           </RadioGroup>
+          
+          {isScheduled && (
+            <div className="mt-4">
+              <Label htmlFor="time" className={isLargeText ? 'text-lg' : ''}>Select Time</Label>
+              <Input
+                id="time"
+                type="time"
+                value={scheduledTime}
+                onChange={(e) => setScheduledTime(e.target.value)}
+                className={isLargeText ? 'h-14 text-lg mt-2' : 'mt-2'}
+                min={new Date().toTimeString().slice(0, 5)}
+              />
+            </div>
+          )}
         </Card>
 
         {/* Payment Method */}

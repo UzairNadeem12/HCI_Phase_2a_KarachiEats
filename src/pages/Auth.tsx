@@ -55,7 +55,7 @@ const Auth = () => {
       <Card className="w-full max-w-md p-6">
         <div className="text-center mb-6">
           <h1 className={`font-bold ${isLargeText ? 'text-4xl' : 'text-3xl'} mb-2`}>
-            {isIconFocused ? '🍽️ KarachiEats' : 'KarachiEats'}
+            KarachiEats
           </h1>
           <p className={`text-muted-foreground ${isLargeText ? 'text-lg' : ''}`}>
             Welcome! Please login or sign up
@@ -65,10 +65,10 @@ const Auth = () => {
         <Tabs defaultValue="login" className="w-full">
           <TabsList className="grid w-full grid-cols-2 mb-6">
             <TabsTrigger value="login" className={isLargeText ? 'text-lg' : ''}>
-              {isIconFocused ? '🔑 Login' : 'Login'}
+              Login
             </TabsTrigger>
             <TabsTrigger value="signup" className={isLargeText ? 'text-lg' : ''}>
-              {isIconFocused ? '➕ Sign Up' : 'Sign Up'}
+              Sign Up
             </TabsTrigger>
           </TabsList>
 
@@ -110,7 +110,7 @@ const Auth = () => {
                 disabled={isLoading}
               >
                 <LogIn className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />
-                {isLoading ? 'Logging in...' : isIconFocused ? '🔑 Login' : 'Login'}
+                {isLoading ? 'Logging in...' : 'Login'}
               </Button>
             </form>
           </TabsContent>
@@ -181,7 +181,7 @@ const Auth = () => {
                 disabled={isLoading}
               >
                 <UserPlus className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />
-                {isLoading ? 'Creating account...' : isIconFocused ? '➕ Sign Up' : 'Sign Up'}
+                {isLoading ? 'Creating account...' : 'Sign Up'}
               </Button>
             </form>
           </TabsContent>
@@ -193,7 +193,7 @@ const Auth = () => {
             onClick={() => navigate('/home')}
             className={isLargeText ? 'text-lg' : ''}
           >
-            {isIconFocused ? '🏠 Continue as Guest' : 'Continue as Guest'}
+            Continue as Guest
           </Button>
         </div>
       </Card>

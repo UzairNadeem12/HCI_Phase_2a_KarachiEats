@@ -24,7 +24,6 @@ const RestaurantCard = ({ restaurant }: RestaurantCardProps) => {
   const { userGroup } = useApp();
   
   const isLargeText = userGroup === 'senior' || userGroup === 'disability';
-  const isIconFocused = userGroup === 'lowLiteracy';
 
   const handleClick = () => {
     if (restaurant.isOpen) {
@@ -48,14 +47,14 @@ const RestaurantCard = ({ restaurant }: RestaurantCardProps) => {
         {!restaurant.isOpen && (
           <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
             <Badge variant="secondary" className={`${isLargeText ? 'text-2xl px-6 py-3' : 'text-lg px-4 py-2'} bg-badge-closed text-white`}>
-              {isIconFocused ? '🔒 Closed' : 'CLOSED'}
+              CLOSED
             </Badge>
           </div>
         )}
         {restaurant.isOpen && (
-          <Badge className={`absolute top-3 left-3 ${isLargeText ? 'text-base px-3 py-1' : 'text-sm'} bg-success`}>
-            {isIconFocused ? '✓ Open' : 'OPEN'}
-          </Badge>
+            <Badge className={`absolute top-3 left-3 ${isLargeText ? 'text-base px-3 py-1' : 'text-sm'} bg-success`}>
+              OPEN
+            </Badge>
         )}
       </div>
 
@@ -80,7 +79,7 @@ const RestaurantCard = ({ restaurant }: RestaurantCardProps) => {
             <div className="flex items-center gap-1 text-muted-foreground">
               <Clock className={`${isLargeText ? 'w-5 h-5' : 'w-4 h-4'}`} />
               <span className={isLargeText ? 'text-base' : ''}>
-                {restaurant.deliveryTime} {isIconFocused ? '⏱️' : 'min'}
+                {restaurant.deliveryTime} min
               </span>
             </div>
           </div>

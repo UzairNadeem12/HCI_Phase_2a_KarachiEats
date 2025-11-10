@@ -122,7 +122,7 @@ const Home = () => {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               <Input
                 type="text"
-                placeholder={isIconFocused ? "🔍 Search food..." : "Search restaurants or cuisines..."}
+                placeholder="Search restaurants or cuisines..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className={`pl-10 ${isLargeText ? 'h-14 text-lg' : 'h-12'}`}
@@ -137,7 +137,7 @@ const Home = () => {
       <main className="container mx-auto px-4 py-6">
         <div className="mb-6">
           <h2 className={`font-bold ${isLargeText ? 'text-3xl' : 'text-2xl'} mb-2`}>
-            {isIconFocused ? '🍽️ Restaurants Near You' : 'Restaurants Near You'}
+            Restaurants Near You
           </h2>
           <p className={`text-muted-foreground ${isLargeText ? 'text-lg' : 'text-sm'}`}>
             {restaurants.filter(r => r.isOpen).length} restaurants delivering now

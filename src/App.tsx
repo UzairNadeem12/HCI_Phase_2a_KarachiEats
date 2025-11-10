@@ -35,8 +35,8 @@ const App = () => (
                     <>
                       <AppSidebar />
                       <div className="flex-1 flex flex-col w-full">
-                        <header className="h-12 flex items-center border-b bg-card sticky top-0 z-50">
-                          <SidebarTrigger className="ml-2" />
+                        <header className="h-14 flex items-center gap-3 border-b bg-card sticky top-0 z-50 px-4">
+                          <SidebarTrigger />
                         </header>
                         <Routes>
                           <Route path="/home" element={<Home />} />

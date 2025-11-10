@@ -28,8 +28,8 @@ export function AppSidebar() {
   const isIconFocused = userGroup === 'lowLiteracy';
 
   return (
-    <Sidebar className={collapsed ? 'w-14' : 'w-60'} collapsible="icon">
-      <SidebarContent>
+    <Sidebar className={`${collapsed ? 'w-14' : 'w-60'} bg-card border-r border-border`} collapsible="icon">
+      <SidebarContent className="bg-card">
         <SidebarGroup>
           <SidebarGroupLabel className={isLargeText ? 'text-lg' : ''}>
             {!collapsed && 'Menu'}
@@ -47,10 +47,6 @@ export function AppSidebar() {
                       <item.icon className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} ${collapsed ? '' : 'mr-2'}`} />
                       {!collapsed && (
                         <span className={isLargeText ? 'text-lg' : ''}>
-                          {isIconFocused && item.title === 'Home' && '🏠 '}
-                          {isIconFocused && item.title === 'Order History' && '📦 '}
-                          {isIconFocused && item.title === 'Profile' && '👤 '}
-                          {isIconFocused && item.title === 'Login' && '🔑 '}
                           {item.title}
                         </span>
                       )}

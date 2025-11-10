@@ -31,7 +31,7 @@ const Profile = () => {
     <div className="min-h-screen bg-background">
       <main className="container mx-auto px-4 py-6 max-w-2xl">
         <h1 className={`font-bold ${isLargeText ? 'text-4xl' : 'text-3xl'} mb-6`}>
-          {isIconFocused ? '👤 Profile' : 'Profile'}
+          Profile
         </h1>
 
         {/* Profile Header */}
@@ -57,12 +57,12 @@ const Profile = () => {
             {isEditing ? (
               <>
                 <Save className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />
-                {isIconFocused ? '💾 Save Changes' : 'Save Changes'}
+                Save Changes
               </>
             ) : (
               <>
                 <Edit2 className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />
-                {isIconFocused ? '✏️ Edit Profile' : 'Edit Profile'}
+                Edit Profile
               </>
             )}
           </Button>
@@ -71,7 +71,7 @@ const Profile = () => {
         {/* Profile Information */}
         <Card className="p-6 mb-6">
           <h3 className={`font-semibold ${isLargeText ? 'text-2xl' : 'text-xl'} mb-4`}>
-            {isIconFocused ? 'ℹ️ Personal Information' : 'Personal Information'}
+            Personal Information
           </h3>
           <div className="space-y-4">
             <div>
@@ -143,7 +143,7 @@ const Profile = () => {
 
           {isEditing && (
             <Button onClick={handleSave} className="w-full mt-6" size={isLargeText ? 'lg' : 'default'}>
-              {isIconFocused ? '💾 Save Changes' : 'Save Changes'}
+              Save Changes
             </Button>
           )}
         </Card>
@@ -151,7 +151,7 @@ const Profile = () => {
         {/* Account Actions */}
         <Card className="p-6">
           <h3 className={`font-semibold ${isLargeText ? 'text-2xl' : 'text-xl'} mb-4`}>
-            {isIconFocused ? '⚙️ Account' : 'Account'}
+            Account
           </h3>
           <div className="space-y-3">
             <Button
@@ -160,7 +160,7 @@ const Profile = () => {
               size={isLargeText ? 'lg' : 'default'}
               onClick={() => navigate('/auth')}
             >
-              {isIconFocused ? '🔑 Login / Sign Up' : 'Login / Sign Up'}
+              Login / Sign Up
             </Button>
             <Button
               variant="outline"
@@ -168,7 +168,7 @@ const Profile = () => {
               size={isLargeText ? 'lg' : 'default'}
               onClick={() => navigate('/order-history')}
             >
-              {isIconFocused ? '📦 Order History' : 'View Order History'}
+              View Order History
             </Button>
           </div>
         </Card>

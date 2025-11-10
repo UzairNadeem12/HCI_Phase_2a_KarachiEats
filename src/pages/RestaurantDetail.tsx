@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Star, Clock, Bike, Plus, Minus } from 'lucide-react';
 import { useState } from 'react';
 import CartButton from '@/components/CartButton';
+import { toast } from 'sonner';
 
 import raitaImg from '@/assets/raita.jpg';
 import naanImg from '@/assets/naan.jpg';
@@ -66,6 +67,7 @@ const RestaurantDetail = () => {
         deliveryFee: restaurant.deliveryFee,
       });
     }
+    toast.success(`${qty} x ${item.name} added to cart`);
     setQuantities(prev => ({ ...prev, [item.id]: 1 }));
   };
 
@@ -120,7 +122,7 @@ const RestaurantDetail = () => {
       {/* Menu */}
       <main className="container mx-auto px-4 py-6">
         <h2 className={`font-bold ${isLargeText ? 'text-3xl' : 'text-2xl'} mb-6`}>
-          {isIconFocused ? '📋 Menu' : 'Menu'}
+          Menu
         </h2>
         
         <div className="space-y-4">
@@ -170,7 +172,7 @@ const RestaurantDetail = () => {
                     size={isLargeText ? "default" : "default"}
                     className={`${isLargeText ? 'h-12 px-6' : ''} whitespace-nowrap`}
                   >
-                    {isIconFocused ? '🛒 Add' : 'Add to Cart'}
+                    Add to Cart
                   </Button>
                 </div>
               </div>

@@ -51,7 +51,7 @@ const OrderHistory = () => {
     <div className="min-h-screen bg-background">
       <main className="container mx-auto px-4 py-6 max-w-4xl">
         <h1 className={`font-bold ${isLargeText ? 'text-4xl' : 'text-3xl'} mb-6`}>
-          {isIconFocused ? '📦 Order History' : 'Order History'}
+          Order History
         </h1>
 
         {dummyOrders.length === 0 ? (
@@ -64,7 +64,7 @@ const OrderHistory = () => {
               Start ordering to see your history here
             </p>
             <Button onClick={() => navigate('/home')} size={isLargeText ? 'lg' : 'default'}>
-              {isIconFocused ? '🍽️ Browse Restaurants' : 'Browse Restaurants'}
+              Browse Restaurants
             </Button>
           </Card>
         ) : (
@@ -92,13 +92,7 @@ const OrderHistory = () => {
                       variant={order.status === 'delivered' ? 'default' : 'secondary'}
                       className={isLargeText ? 'text-base px-4 py-2' : ''}
                     >
-                      {order.status === 'delivered'
-                        ? isIconFocused
-                          ? '✅ Delivered'
-                          : 'Delivered'
-                        : isIconFocused
-                        ? '❌ Cancelled'
-                        : 'Cancelled'}
+                      {order.status === 'delivered' ? 'Delivered' : 'Cancelled'}
                     </Badge>
                   </div>
                 </div>
@@ -122,7 +116,7 @@ const OrderHistory = () => {
                     size={isLargeText ? 'lg' : 'default'}
                     onClick={() => navigate('/home')}
                   >
-                    {isIconFocused ? '🔄 Reorder' : 'Reorder'}
+                    Reorder
                   </Button>
                   <Button
                     variant="outline"
@@ -130,7 +124,7 @@ const OrderHistory = () => {
                     size={isLargeText ? 'lg' : 'default'}
                     onClick={() => navigate(`/tracking/${order.id}`)}
                   >
-                    {isIconFocused ? '👀 View Details' : 'View Details'}
+                    View Details
                   </Button>
                 </div>
               </Card>

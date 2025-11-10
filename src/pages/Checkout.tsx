@@ -5,8 +5,9 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { ArrowLeft, Trash2, Plus, Minus, Calendar } from 'lucide-react';
+import { ArrowLeft, Trash2, Plus, Minus } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -16,6 +17,10 @@ const Checkout = () => {
   const [scheduledTime, setScheduledTime] = useState('');
   const [guestName, setGuestName] = useState('');
   const [guestPhone, setGuestPhone] = useState('');
+  const [cardNumber, setCardNumber] = useState('');
+  const [cardExpiry, setCardExpiry] = useState('');
+  const [cardCVV, setCardCVV] = useState('');
+  const [mobileWallet, setMobileWallet] = useState('');
 
   const isLargeText = userGroup === 'senior' || userGroup === 'disability';
   const isIconFocused = userGroup === 'lowLiteracy';
@@ -25,14 +30,30 @@ const Checkout = () => {
 
   const handlePlaceOrder = () => {
     if (!guestName || !guestPhone) {
-      alert('Please fill in your contact details');
+      toast.error('Please fill in your contact details');
       return;
     }
     if (isScheduled && !scheduledTime) {
-      alert('Please select a delivery time');
+      toast.error('Please select a delivery time');
       return;
     }
+    if (paymentMethod === 'card' && (!cardNumber || !cardExpiry || !cardCVV)) {
+      toast.error('Please fill in your card details');
+      return;
+    }
+    if (paymentMethod === 'jazzcash' && !mobileWallet) {
+      toast.error('Please enter your JazzCash/Easypaisa number');
+      return;
+    }
+    
     clearCart();
+    
+    if (isScheduled) {
+      toast.success(`Order scheduled for ${scheduledTime}! We'll deliver at the requested time.`);
+    } else {
+      toast.success('Order placed successfully! Your food is on the way.');
+    }
+    
     navigate('/tracking/12345');
   };
 
@@ -41,10 +62,10 @@ const Checkout = () => {
       <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6">
         <div className="text-center space-y-4">
           <h1 className={`font-bold ${isLargeText ? 'text-3xl' : 'text-2xl'}`}>
-            {isIconFocused ? '🛒 Your cart is empty' : 'Your cart is empty'}
+            Your cart is empty
           </h1>
           <Button onClick={() => navigate('/home')} size={isLargeText ? "lg" : "default"}>
-            {isIconFocused ? '🍽️ Browse Restaurants' : 'Browse Restaurants'}
+            Browse Restaurants
           </Button>
         </div>
       </div>
@@ -65,13 +86,13 @@ const Checkout = () => {
 
       <main className="container mx-auto px-4 py-6 max-w-3xl">
         <h1 className={`font-bold ${isLargeText ? 'text-4xl' : 'text-3xl'} mb-6`}>
-          {isIconFocused ? '✅ Checkout' : 'Checkout'}
+          Checkout
         </h1>
 
         {/* Guest Details */}
         <Card className="p-6 mb-6">
           <h2 className={`font-semibold ${isLargeText ? 'text-2xl' : 'text-xl'} mb-4`}>
-            {isIconFocused ? '👤 Contact Details' : 'Contact Details'}
+            Contact Details
           </h2>
           <div className="space-y-4">
             <div>
@@ -100,7 +121,7 @@ const Checkout = () => {
         {/* Cart Items */}
         <Card className="p-6 mb-6">
           <h2 className={`font-semibold ${isLargeText ? 'text-2xl' : 'text-xl'} mb-4`}>
-            {isIconFocused ? '🛒 Your Order' : 'Your Order'}
+            Your Order
           </h2>
           <div className="space-y-4">
             {cart.map(item => (
@@ -150,12 +171,9 @@ const Checkout = () => {
 
         {/* Delivery Schedule */}
         <Card className="p-6 mb-6">
-          <div className="flex items-center gap-3 mb-4">
-            <Calendar className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} text-primary`} />
-            <h2 className={`font-semibold ${isLargeText ? 'text-2xl' : 'text-xl'}`}>
-              {isIconFocused ? '📅 Delivery Time' : 'Delivery Time'}
-            </h2>
-          </div>
+          <h2 className={`font-semibold ${isLargeText ? 'text-2xl' : 'text-xl'} mb-4`}>
+            Delivery Time
+          </h2>
           <RadioGroup value={isScheduled ? 'later' : 'now'} onValueChange={(v) => setIsScheduled(v === 'later')}>
             <div className="flex items-center space-x-2 mb-2">
               <RadioGroupItem value="now" id="now" />
@@ -185,7 +203,7 @@ const Checkout = () => {
         {/* Payment Method */}
         <Card className="p-6 mb-6">
           <h2 className={`font-semibold ${isLargeText ? 'text-2xl' : 'text-xl'} mb-4`}>
-            {isIconFocused ? '💳 Payment Method' : 'Payment Method'}
+            Payment Method
           </h2>
           <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
             <div className="flex items-center space-x-2 mb-2">
@@ -201,12 +219,66 @@ const Checkout = () => {
               <Label htmlFor="jazzcash" className={isLargeText ? 'text-lg' : ''}>JazzCash/Easypaisa</Label>
             </div>
           </RadioGroup>
+
+          {paymentMethod === 'card' && (
+            <div className="mt-6 space-y-4 pt-4 border-t border-border">
+              <div>
+                <Label htmlFor="cardNumber" className={isLargeText ? 'text-lg' : ''}>Card Number</Label>
+                <Input
+                  id="cardNumber"
+                  placeholder="1234 5678 9012 3456"
+                  value={cardNumber}
+                  onChange={(e) => setCardNumber(e.target.value)}
+                  className={isLargeText ? 'h-14 text-lg mt-2' : 'mt-2'}
+                  maxLength={19}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="cardExpiry" className={isLargeText ? 'text-lg' : ''}>Expiry</Label>
+                  <Input
+                    id="cardExpiry"
+                    placeholder="MM/YY"
+                    value={cardExpiry}
+                    onChange={(e) => setCardExpiry(e.target.value)}
+                    className={isLargeText ? 'h-14 text-lg mt-2' : 'mt-2'}
+                    maxLength={5}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="cardCVV" className={isLargeText ? 'text-lg' : ''}>CVV</Label>
+                  <Input
+                    id="cardCVV"
+                    placeholder="123"
+                    type="password"
+                    value={cardCVV}
+                    onChange={(e) => setCardCVV(e.target.value)}
+                    className={isLargeText ? 'h-14 text-lg mt-2' : 'mt-2'}
+                    maxLength={3}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {paymentMethod === 'jazzcash' && (
+            <div className="mt-6 pt-4 border-t border-border">
+              <Label htmlFor="mobileWallet" className={isLargeText ? 'text-lg' : ''}>JazzCash/Easypaisa Number</Label>
+              <Input
+                id="mobileWallet"
+                placeholder="03XX-XXXXXXX"
+                value={mobileWallet}
+                onChange={(e) => setMobileWallet(e.target.value)}
+                className={isLargeText ? 'h-14 text-lg mt-2' : 'mt-2'}
+              />
+            </div>
+          )}
         </Card>
 
         {/* Order Summary */}
         <Card className="p-6 mb-6 bg-secondary">
           <h2 className={`font-semibold ${isLargeText ? 'text-2xl' : 'text-xl'} mb-4`}>
-            {isIconFocused ? '📝 Summary' : 'Order Summary'}
+            Order Summary
           </h2>
           <div className="space-y-2">
             <div className="flex justify-between">
@@ -230,7 +302,7 @@ const Checkout = () => {
           size={isLargeText ? "lg" : "default"}
           className={`w-full ${isLargeText ? 'h-16 text-xl' : 'h-14 text-lg'}`}
         >
-          {isIconFocused ? '✅ Place Order - Rs. ' + total : `Place Order - Rs. ${total}`}
+          Place Order - Rs. {total}
         </Button>
       </main>
     </div>

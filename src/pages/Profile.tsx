@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { User, Mail, Phone, MapPin, Edit2, Save } from 'lucide-react';
+import { User, Mail, Phone, MapPin, Edit2, Save, LogIn, History } from 'lucide-react';
 import { toast } from 'sonner';
 
 const Profile = () => {
@@ -160,6 +160,7 @@ const Profile = () => {
               size={isLargeText ? 'lg' : 'default'}
               onClick={() => navigate('/auth')}
             >
+              {isIconFocused && <LogIn className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />}
               Login / Sign Up
             </Button>
             <Button
@@ -168,6 +169,7 @@ const Profile = () => {
               size={isLargeText ? 'lg' : 'default'}
               onClick={() => navigate('/order-history')}
             >
+              {isIconFocused && <History className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />}
               View Order History
             </Button>
           </div>

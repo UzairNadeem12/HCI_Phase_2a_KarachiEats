@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { LogIn, UserPlus } from 'lucide-react';
+import { LogIn, UserPlus, Mail, Lock, UserCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
 const Auth = () => {
@@ -76,7 +76,8 @@ const Auth = () => {
           <TabsContent value="login">
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
-                <Label htmlFor="login-email" className={isLargeText ? 'text-lg' : ''}>
+                <Label htmlFor="login-email" className={`${isLargeText ? 'text-lg' : ''} ${isIconFocused ? 'flex items-center gap-2' : ''}`}>
+                  {isIconFocused && <Mail className="w-4 h-4" />}
                   Email
                 </Label>
                 <Input
@@ -90,7 +91,8 @@ const Auth = () => {
                 />
               </div>
               <div>
-                <Label htmlFor="login-password" className={isLargeText ? 'text-lg' : ''}>
+                <Label htmlFor="login-password" className={`${isLargeText ? 'text-lg' : ''} ${isIconFocused ? 'flex items-center gap-2' : ''}`}>
+                  {isIconFocused && <Lock className="w-4 h-4" />}
                   Password
                 </Label>
                 <Input
@@ -119,7 +121,8 @@ const Auth = () => {
           <TabsContent value="signup">
             <form onSubmit={handleSignup} className="space-y-4">
               <div>
-                <Label htmlFor="signup-name" className={isLargeText ? 'text-lg' : ''}>
+                <Label htmlFor="signup-name" className={`${isLargeText ? 'text-lg' : ''} ${isIconFocused ? 'flex items-center gap-2' : ''}`}>
+                  {isIconFocused && <UserCircle className="w-4 h-4" />}
                   Full Name
                 </Label>
                 <Input
@@ -133,7 +136,8 @@ const Auth = () => {
                 />
               </div>
               <div>
-                <Label htmlFor="signup-email" className={isLargeText ? 'text-lg' : ''}>
+                <Label htmlFor="signup-email" className={`${isLargeText ? 'text-lg' : ''} ${isIconFocused ? 'flex items-center gap-2' : ''}`}>
+                  {isIconFocused && <Mail className="w-4 h-4" />}
                   Email
                 </Label>
                 <Input
@@ -147,7 +151,8 @@ const Auth = () => {
                 />
               </div>
               <div>
-                <Label htmlFor="signup-password" className={isLargeText ? 'text-lg' : ''}>
+                <Label htmlFor="signup-password" className={`${isLargeText ? 'text-lg' : ''} ${isIconFocused ? 'flex items-center gap-2' : ''}`}>
+                  {isIconFocused && <Lock className="w-4 h-4" />}
                   Password
                 </Label>
                 <Input
@@ -161,7 +166,8 @@ const Auth = () => {
                 />
               </div>
               <div>
-                <Label htmlFor="signup-confirm" className={isLargeText ? 'text-lg' : ''}>
+                <Label htmlFor="signup-confirm" className={`${isLargeText ? 'text-lg' : ''} ${isIconFocused ? 'flex items-center gap-2' : ''}`}>
+                  {isIconFocused && <Lock className="w-4 h-4" />}
                   Confirm Password
                 </Label>
                 <Input
@@ -193,6 +199,7 @@ const Auth = () => {
             onClick={() => navigate('/home')}
             className={isLargeText ? 'text-lg' : ''}
           >
+            {isIconFocused && <UserCircle className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />}
             Continue as Guest
           </Button>
         </div>

@@ -3,7 +3,7 @@ import { useApp } from '@/contexts/AppContext';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Clock, Package } from 'lucide-react';
+import { Clock, Package, RotateCcw, FileText } from 'lucide-react';
 
 const dummyOrders = [
   {
@@ -116,6 +116,7 @@ const OrderHistory = () => {
                     size={isLargeText ? 'lg' : 'default'}
                     onClick={() => navigate('/home')}
                   >
+                    {isIconFocused && <RotateCcw className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />}
                     Reorder
                   </Button>
                   <Button
@@ -124,6 +125,7 @@ const OrderHistory = () => {
                     size={isLargeText ? 'lg' : 'default'}
                     onClick={() => navigate(`/tracking/${order.id}`)}
                   >
+                    {isIconFocused && <FileText className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />}
                     View Details
                   </Button>
                 </div>

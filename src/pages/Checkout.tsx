@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { ArrowLeft, Trash2, Plus, Minus } from 'lucide-react';
+import { ArrowLeft, Trash2, Plus, Minus, User, Phone, Clock, CreditCard, Wallet, DollarSign, ShoppingBag } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -96,7 +96,10 @@ const Checkout = () => {
           </h2>
           <div className="space-y-4">
             <div>
-              <Label htmlFor="name" className={isLargeText ? 'text-lg' : ''}>Name</Label>
+              <Label htmlFor="name" className={`${isLargeText ? 'text-lg' : ''} ${isIconFocused ? 'flex items-center gap-2' : ''}`}>
+                {isIconFocused && <User className="w-4 h-4" />}
+                Name
+              </Label>
               <Input
                 id="name"
                 placeholder="Your name"
@@ -106,7 +109,10 @@ const Checkout = () => {
               />
             </div>
             <div>
-              <Label htmlFor="phone" className={isLargeText ? 'text-lg' : ''}>Phone Number</Label>
+              <Label htmlFor="phone" className={`${isLargeText ? 'text-lg' : ''} ${isIconFocused ? 'flex items-center gap-2' : ''}`}>
+                {isIconFocused && <Phone className="w-4 h-4" />}
+                Phone Number
+              </Label>
               <Input
                 id="phone"
                 placeholder="03XX-XXXXXXX"
@@ -171,7 +177,8 @@ const Checkout = () => {
 
         {/* Delivery Schedule */}
         <Card className="p-6 mb-6">
-          <h2 className={`font-semibold ${isLargeText ? 'text-2xl' : 'text-xl'} mb-4`}>
+          <h2 className={`font-semibold ${isLargeText ? 'text-2xl' : 'text-xl'} mb-4 ${isIconFocused ? 'flex items-center gap-2' : ''}`}>
+            {isIconFocused && <Clock className="w-5 h-5" />}
             Delivery Time
           </h2>
           <RadioGroup value={isScheduled ? 'later' : 'now'} onValueChange={(v) => setIsScheduled(v === 'later')}>
@@ -202,21 +209,31 @@ const Checkout = () => {
 
         {/* Payment Method */}
         <Card className="p-6 mb-6">
-          <h2 className={`font-semibold ${isLargeText ? 'text-2xl' : 'text-xl'} mb-4`}>
+          <h2 className={`font-semibold ${isLargeText ? 'text-2xl' : 'text-xl'} mb-4 ${isIconFocused ? 'flex items-center gap-2' : ''}`}>
+            {isIconFocused && <Wallet className="w-5 h-5" />}
             Payment Method
           </h2>
           <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
             <div className="flex items-center space-x-2 mb-2">
               <RadioGroupItem value="cash" id="cash" />
-              <Label htmlFor="cash" className={isLargeText ? 'text-lg' : ''}>Cash on Delivery</Label>
+              <Label htmlFor="cash" className={`${isLargeText ? 'text-lg' : ''} ${isIconFocused ? 'flex items-center gap-2' : ''}`}>
+                {isIconFocused && <DollarSign className="w-4 h-4" />}
+                Cash on Delivery
+              </Label>
             </div>
             <div className="flex items-center space-x-2 mb-2">
               <RadioGroupItem value="card" id="card" />
-              <Label htmlFor="card" className={isLargeText ? 'text-lg' : ''}>Credit/Debit Card</Label>
+              <Label htmlFor="card" className={`${isLargeText ? 'text-lg' : ''} ${isIconFocused ? 'flex items-center gap-2' : ''}`}>
+                {isIconFocused && <CreditCard className="w-4 h-4" />}
+                Credit/Debit Card
+              </Label>
             </div>
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="jazzcash" id="jazzcash" />
-              <Label htmlFor="jazzcash" className={isLargeText ? 'text-lg' : ''}>JazzCash/Easypaisa</Label>
+              <Label htmlFor="jazzcash" className={`${isLargeText ? 'text-lg' : ''} ${isIconFocused ? 'flex items-center gap-2' : ''}`}>
+                {isIconFocused && <Wallet className="w-4 h-4" />}
+                JazzCash/Easypaisa
+              </Label>
             </div>
           </RadioGroup>
 
@@ -302,6 +319,7 @@ const Checkout = () => {
           size={isLargeText ? "lg" : "default"}
           className={`w-full ${isLargeText ? 'h-16 text-xl' : 'h-14 text-lg'}`}
         >
+          {isIconFocused && <ShoppingBag className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />}
           Place Order - Rs. {total}
         </Button>
       </main>

@@ -20,7 +20,7 @@ const Onboarding = () => {
           </h1>
 
           <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-          Enjoy fast food delivery, personalized restaurant recommendations, and a clean, modern interface.
+          Enjoy fast food delivery, personalized restaurant recommendations, and smooth ordering experience.
         </p>
 
         <div className="pt-6">

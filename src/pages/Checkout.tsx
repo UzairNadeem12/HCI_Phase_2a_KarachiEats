@@ -130,7 +130,7 @@ const Checkout = () => {
           </h2>
           <div className="space-y-4">
             {cart.map(item => (
-              <div key={item.id} className="flex items-center gap-4 pb-4 border-b border-border last:border-0">
+              <div key={item.id} className="flex items-center gap-3 pb-4 border-b border-border last:border-0">
                 {item.image && (
                   <img src={item.image} alt={item.name} className={`${isLargeText ? 'w-20 h-20' : 'w-16 h-16'} object-cover rounded`} />
                 )}
@@ -141,7 +141,7 @@ const Checkout = () => {
                   </p>
                 </div>
                 {/* <div className="flex items-center gap-2"> Asna*/}
-                <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0"> 
+                <div className="flex items-center gap-[2px] sm:gap-1 flex-shrink-0"> 
                   <Button
                     variant="outline"
                     size="icon"

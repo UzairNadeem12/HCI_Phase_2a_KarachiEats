@@ -11,7 +11,7 @@ import { toast } from 'sonner';
 
 const Profile = () => {
   const navigate = useNavigate();
-  const { userGroup, location } = useApp();
+  const { settings, location, isLoggedIn, userInfo } = useApp();
   const [isEditing, setIsEditing] = useState(false);
   const [guestData, setGuestData] = useState({
     name: 'Guest User',
@@ -19,8 +19,7 @@ const Profile = () => {
     phone: '0300-1234567',
   });
 
-  const isLargeText = userGroup === 'senior' || userGroup === 'disability';
-  const isIconFocused = userGroup === 'lowLiteracy';
+  const isLargeText = settings.largeText;
 
   const handleSave = () => {
     setIsEditing(false);
@@ -156,20 +155,20 @@ const Profile = () => {
           <div className="space-y-3">
             <Button
               variant="outline"
-              className="w-full justify-start"
+              className="w-full justify-start flex items-center gap-2"
               size={isLargeText ? 'lg' : 'default'}
               onClick={() => navigate('/auth')}
             >
-              {isIconFocused && <LogIn className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />}
+              <LogIn className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'}`} />
               Login / Sign Up
             </Button>
             <Button
               variant="outline"
-              className="w-full justify-start"
+              className="w-full justify-start flex items-center gap-2"
               size={isLargeText ? 'lg' : 'default'}
               onClick={() => navigate('/order-history')}
             >
-              {isIconFocused && <History className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />}
+              <History className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'}`} />
               View Order History
             </Button>
           </div>

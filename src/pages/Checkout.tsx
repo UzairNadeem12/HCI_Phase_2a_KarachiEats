@@ -11,7 +11,7 @@ import { toast } from 'sonner';
 
 const Checkout = () => {
   const navigate = useNavigate();
-  const { cart, updateQuantity, removeFromCart, cartTotal, clearCart, userGroup } = useApp();
+  const { cart, updateQuantity, removeFromCart, cartTotal, clearCart, settings, isLoggedIn, userInfo } = useApp();
   const [paymentMethod, setPaymentMethod] = useState('cash');
   const [isScheduled, setIsScheduled] = useState(false);
   const [scheduledTime, setScheduledTime] = useState('');
@@ -22,8 +22,7 @@ const Checkout = () => {
   const [cardCVV, setCardCVV] = useState('');
   const [mobileWallet, setMobileWallet] = useState('');
 
-  const isLargeText = userGroup === 'senior' || userGroup === 'disability';
-  const isIconFocused = userGroup === 'lowLiteracy';
+  const isLargeText = settings.largeText;
 
   const deliveryFee = cart[0]?.deliveryFee || 60;
   const total = cartTotal + deliveryFee;
@@ -79,7 +78,7 @@ const Checkout = () => {
         <div className="container mx-auto px-4 py-4">
           <Button variant="ghost" onClick={() => navigate(-1)} size={isLargeText ? "lg" : "default"}>
             <ArrowLeft className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />
-            {!isIconFocused && 'Back'}
+            Back
           </Button>
         </div>
       </header>
@@ -96,8 +95,8 @@ const Checkout = () => {
           </h2>
           <div className="space-y-4">
             <div>
-              <Label htmlFor="name" className={`${isLargeText ? 'text-lg' : ''} ${isIconFocused ? 'flex items-center gap-2' : ''}`}>
-                {isIconFocused && <User className="w-4 h-4" />}
+              <Label htmlFor="name" className={`${isLargeText ? 'text-lg' : ''} flex items-center gap-2`}>
+                <User className="w-4 h-4" />
                 Name
               </Label>
               <Input
@@ -109,8 +108,8 @@ const Checkout = () => {
               />
             </div>
             <div>
-              <Label htmlFor="phone" className={`${isLargeText ? 'text-lg' : ''} ${isIconFocused ? 'flex items-center gap-2' : ''}`}>
-                {isIconFocused && <Phone className="w-4 h-4" />}
+              <Label htmlFor="phone" className={`${isLargeText ? 'text-lg' : ''} flex items-center gap-2`}>
+                <Phone className="w-4 h-4" />
                 Phone Number
               </Label>
               <Input
@@ -141,35 +140,35 @@ const Checkout = () => {
                     Rs. {item.price}
                   </p>
                 </div>
-                <div className="flex items-center gap-1 sm:gap-2">
+                <div className="flex items-center gap-2">
                   <Button
                     variant="outline"
-                    size={isLargeText ? "default" : "icon"}
+                    size="icon"
                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                    className={isLargeText ? 'h-10 w-10 sm:h-12 sm:w-12' : ''}
+                    className={isLargeText ? 'h-12 w-12' : 'h-9 w-9'}
                   >
-                    <Minus className={`${isLargeText ? 'w-4 h-4 sm:w-5 sm:h-5' : 'w-4 h-4'}`} />
+                    <Minus className={`${isLargeText ? 'w-5 h-5' : 'w-4 h-4'}`} />
                   </Button>
-                  <span className={`min-w-[2rem] text-center font-medium ${isLargeText ? 'text-lg sm:text-xl' : ''}`}>
+                  <span className={`min-w-[2.5rem] text-center font-medium ${isLargeText ? 'text-xl' : 'text-base'}`}>
                     {item.quantity}
                   </span>
                   <Button
                     variant="outline"
-                    size={isLargeText ? "default" : "icon"}
+                    size="icon"
                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                    className={isLargeText ? 'h-10 w-10 sm:h-12 sm:w-12' : ''}
+                    className={isLargeText ? 'h-12 w-12' : 'h-9 w-9'}
                   >
-                    <Plus className={`${isLargeText ? 'w-4 h-4 sm:w-5 sm:h-5' : 'w-4 h-4'}`} />
+                    <Plus className={`${isLargeText ? 'w-5 h-5' : 'w-4 h-4'}`} />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => removeFromCart(item.id)}
+                    className={isLargeText ? 'h-12 w-12' : 'h-9 w-9'}
+                  >
+                    <Trash2 className={`${isLargeText ? 'w-5 h-5' : 'w-4 h-4'} text-destructive`} />
                   </Button>
                 </div>
-                <Button
-                  variant="ghost"
-                  size={isLargeText ? "default" : "icon"}
-                  onClick={() => removeFromCart(item.id)}
-                  className={isLargeText ? 'h-10 w-10 sm:h-12 sm:w-12' : ''}
-                >
-                  <Trash2 className={`${isLargeText ? 'w-4 h-4 sm:w-5 sm:h-5' : 'w-4 h-4'} text-destructive`} />
-                </Button>
               </div>
             ))}
           </div>
@@ -177,8 +176,8 @@ const Checkout = () => {
 
         {/* Delivery Schedule */}
         <Card className="p-6 mb-6">
-          <h2 className={`font-semibold ${isLargeText ? 'text-2xl' : 'text-xl'} mb-4 ${isIconFocused ? 'flex items-center gap-2' : ''}`}>
-            {isIconFocused && <Clock className="w-5 h-5" />}
+          <h2 className={`font-semibold ${isLargeText ? 'text-2xl' : 'text-xl'} mb-4 flex items-center gap-2`}>
+            <Clock className="w-5 h-5" />
             Delivery Time
           </h2>
           <RadioGroup value={isScheduled ? 'later' : 'now'} onValueChange={(v) => setIsScheduled(v === 'later')}>
@@ -209,29 +208,29 @@ const Checkout = () => {
 
         {/* Payment Method */}
         <Card className="p-6 mb-6">
-          <h2 className={`font-semibold ${isLargeText ? 'text-2xl' : 'text-xl'} mb-4 ${isIconFocused ? 'flex items-center gap-2' : ''}`}>
-            {isIconFocused && <Wallet className="w-5 h-5" />}
+          <h2 className={`font-semibold ${isLargeText ? 'text-2xl' : 'text-xl'} mb-4 flex items-center gap-2`}>
+            <Wallet className="w-5 h-5" />
             Payment Method
           </h2>
           <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
             <div className="flex items-center space-x-2 mb-2">
               <RadioGroupItem value="cash" id="cash" />
-              <Label htmlFor="cash" className={`${isLargeText ? 'text-lg' : ''} ${isIconFocused ? 'flex items-center gap-2' : ''}`}>
-                {isIconFocused && <DollarSign className="w-4 h-4" />}
+              <Label htmlFor="cash" className={`${isLargeText ? 'text-lg' : ''} flex items-center gap-2`}>
+                <DollarSign className="w-4 h-4" />
                 Cash on Delivery
               </Label>
             </div>
             <div className="flex items-center space-x-2 mb-2">
               <RadioGroupItem value="card" id="card" />
-              <Label htmlFor="card" className={`${isLargeText ? 'text-lg' : ''} ${isIconFocused ? 'flex items-center gap-2' : ''}`}>
-                {isIconFocused && <CreditCard className="w-4 h-4" />}
+              <Label htmlFor="card" className={`${isLargeText ? 'text-lg' : ''} flex items-center gap-2`}>
+                <CreditCard className="w-4 h-4" />
                 Credit/Debit Card
               </Label>
             </div>
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="jazzcash" id="jazzcash" />
-              <Label htmlFor="jazzcash" className={`${isLargeText ? 'text-lg' : ''} ${isIconFocused ? 'flex items-center gap-2' : ''}`}>
-                {isIconFocused && <Wallet className="w-4 h-4" />}
+              <Label htmlFor="jazzcash" className={`${isLargeText ? 'text-lg' : ''} flex items-center gap-2`}>
+                <Wallet className="w-4 h-4" />
                 JazzCash/Easypaisa
               </Label>
             </div>
@@ -317,9 +316,9 @@ const Checkout = () => {
         <Button 
           onClick={handlePlaceOrder}
           size={isLargeText ? "lg" : "default"}
-          className={`w-full ${isLargeText ? 'h-16 text-xl' : 'h-14 text-lg'}`}
+          className={`w-full ${isLargeText ? 'h-16 text-xl' : 'h-14 text-lg'} flex items-center justify-center gap-2`}
         >
-          {isIconFocused && <ShoppingBag className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />}
+          <ShoppingBag className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'}`} />
           Place Order - Rs. {total}
         </Button>
       </main>

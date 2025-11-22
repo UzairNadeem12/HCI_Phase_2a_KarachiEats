@@ -1,4 +1,4 @@
-import { User, History, LogIn, Home, Settings } from 'lucide-react';
+import { User, History, LogIn, Home, Settings as SettingsIcon } from 'lucide-react';
 import { NavLink } from '@/components/NavLink';
 import { useApp } from '@/contexts/AppContext';
 import {
@@ -17,15 +17,15 @@ const menuItems = [
   { title: 'Home', url: '/home', icon: Home },
   { title: 'Order History', url: '/order-history', icon: History },
   { title: 'Profile', url: '/profile', icon: User },
+  { title: 'Settings', url: '/settings', icon: SettingsIcon },
   { title: 'Login', url: '/auth', icon: LogIn },
 ];
 
 export function AppSidebar() {
   const { state } = useSidebar();
-  const { userGroup } = useApp();
+  const { settings } = useApp();
   const collapsed = state === 'collapsed';
-  const isLargeText = userGroup === 'senior' || userGroup === 'disability';
-  const isIconFocused = userGroup === 'lowLiteracy';
+  const isLargeText = settings.largeText;
 
   return (
     <Sidebar className={`${collapsed ? 'w-14' : 'w-60'} bg-card border-r border-border`} collapsible="icon">

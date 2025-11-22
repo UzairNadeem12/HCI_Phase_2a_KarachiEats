@@ -12,6 +12,18 @@ export interface CartItem {
   deliveryFee?: number;
 }
 
+export interface UserInfo {
+  email: string;
+  name: string;
+  phone: string;
+  locations: string[];
+}
+
+export interface AppSettings {
+  language: 'en' | 'ur';
+  largeText: boolean;
+}
+
 interface AppContextType {
   userGroup: UserGroup;
   setUserGroup: (group: UserGroup) => void;
@@ -23,6 +35,12 @@ interface AppContextType {
   updateQuantity: (itemId: string, quantity: number) => void;
   clearCart: () => void;
   cartTotal: number;
+  settings: AppSettings;
+  updateSettings: (settings: Partial<AppSettings>) => void;
+  userInfo: UserInfo | null;
+  setUserInfo: (info: UserInfo | null) => void;
+  isLoggedIn: boolean;
+  setIsLoggedIn: (loggedIn: boolean) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -31,6 +49,16 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [userGroup, setUserGroup] = useState<UserGroup>(null);
   const [location, setLocation] = useState<string>('Karachi, Pakistan');
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [settings, setSettings] = useState<AppSettings>({
+    language: 'en',
+    largeText: false,
+  });
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const updateSettings = (newSettings: Partial<AppSettings>) => {
+    setSettings(prev => ({ ...prev, ...newSettings }));
+  };
 
   const addToCart = (item: Omit<CartItem, 'quantity'>) => {
     setCart(prev => {
@@ -70,6 +98,12 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       updateQuantity,
       clearCart,
       cartTotal,
+      settings,
+      updateSettings,
+      userInfo,
+      setUserInfo,
+      isLoggedIn,
+      setIsLoggedIn,
     }}>
       {children}
     </AppContext.Provider>

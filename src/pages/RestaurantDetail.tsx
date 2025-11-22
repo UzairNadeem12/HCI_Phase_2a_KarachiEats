@@ -46,14 +46,13 @@ const restaurantData: Record<string, any> = {
 const RestaurantDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { addToCart, cart, userGroup } = useApp();
+  const { addToCart, cart, settings } = useApp();
   const [quantities, setQuantities] = useState<Record<string, number>>({});
 
   const restaurant = restaurantData[id || '1'];
   const menu = menuItems[id as keyof typeof menuItems] || menuItems['1'];
 
-  const isLargeText = userGroup === 'senior' || userGroup === 'disability';
-  const isIconFocused = userGroup === 'lowLiteracy';
+  const isLargeText = settings.largeText;
 
   const handleAddToCart = (item: typeof menu[0]) => {
     const qty = quantities[item.id] || 1;
@@ -86,7 +85,7 @@ const RestaurantDetail = () => {
           <div className="flex items-center justify-between">
             <Button variant="ghost" onClick={() => navigate(-1)} size={isLargeText ? "lg" : "default"}>
               <ArrowLeft className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />
-              {!isIconFocused && 'Back'}
+              Back
             </Button>
             <CartButton />
           </div>

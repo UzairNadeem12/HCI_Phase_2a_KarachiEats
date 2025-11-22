@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useApp } from '@/contexts/AppContext';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, MapPin, SlidersHorizontal, ShoppingCart } from 'lucide-react';
+import { Search, MapPin, SlidersHorizontal } from 'lucide-react';
 import RestaurantCard from '@/components/RestaurantCard';
 import CartButton from '@/components/CartButton';
 import LocationPicker from '@/components/LocationPicker';
@@ -112,7 +112,6 @@ const Home = () => {
                 {location}
               </span>
             </button>
-            <CartButton />
           </div>
 
           {/* Search Bar */}
@@ -159,6 +158,7 @@ const Home = () => {
         </div>
       </main>
       
+      <CartButton />
       <LocationPicker open={showLocationPicker} onClose={() => setShowLocationPicker(false)} />
     </div>
   );

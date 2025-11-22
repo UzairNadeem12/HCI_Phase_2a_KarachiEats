@@ -87,7 +87,6 @@ const RestaurantDetail = () => {
               <ArrowLeft className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />
               Back
             </Button>
-            <CartButton />
           </div>
         </div>
       </header>
@@ -179,6 +178,8 @@ const RestaurantDetail = () => {
           ))}
         </div>
       </main>
+      
+      <CartButton />
     </div>
   );
 };

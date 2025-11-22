@@ -3,26 +3,43 @@ import { useApp } from '@/contexts/AppContext';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ShoppingCart } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 const CartButton = () => {
   const navigate = useNavigate();
-  const { cart, userGroup } = useApp();
+  const { cart, settings } = useApp();
+  const [animate, setAnimate] = useState(false);
   
   const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const isLargeText = userGroup === 'senior' || userGroup === 'disability';
+  const isLargeText = settings.largeText;
+
+  // Trigger animation when cart changes
+  useEffect(() => {
+    if (itemCount > 0) {
+      setAnimate(true);
+      const timer = setTimeout(() => setAnimate(false), 300);
+      return () => clearTimeout(timer);
+    }
+  }, [itemCount]);
 
   if (itemCount === 0) return null;
 
   return (
     <Button 
       onClick={() => navigate('/checkout')}
-      className={`relative ${isLargeText ? 'h-12 px-6' : 'h-10'}`}
+      className={`fixed bottom-6 right-6 z-50 shadow-lg hover:shadow-xl transition-all ${
+        animate ? 'animate-scale-in' : ''
+      } ${isLargeText ? 'h-16 w-16 p-0' : 'h-14 w-14 p-0'} rounded-full`}
+      size="icon"
     >
-      <ShoppingCart className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />
-      <span className={isLargeText ? 'text-base' : 'text-sm'}>Cart</span>
+      <ShoppingCart className={`${isLargeText ? 'w-7 h-7' : 'w-6 h-6'}`} />
       <Badge 
         variant="secondary" 
-        className="absolute -top-2 -right-2 bg-accent text-accent-foreground"
+        className={`absolute -top-1 -right-1 ${
+          isLargeText ? 'h-7 w-7 text-base' : 'h-6 w-6 text-sm'
+        } rounded-full flex items-center justify-center bg-accent text-accent-foreground border-2 border-background ${
+          animate ? 'animate-[pulse_0.5s_ease-in-out]' : ''
+        }`}
       >
         {itemCount}
       </Badge>

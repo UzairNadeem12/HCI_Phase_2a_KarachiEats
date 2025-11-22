@@ -42,10 +42,9 @@ const dummyOrders = [
 
 const OrderHistory = () => {
   const navigate = useNavigate();
-  const { userGroup } = useApp();
+  const { settings } = useApp();
 
-  const isLargeText = userGroup === 'senior' || userGroup === 'disability';
-  const isIconFocused = userGroup === 'lowLiteracy';
+  const isLargeText = settings.largeText;
 
   return (
     <div className="min-h-screen bg-background">
@@ -112,20 +111,20 @@ const OrderHistory = () => {
                 <div className="flex gap-3">
                   <Button
                     variant="outline"
-                    className="flex-1"
+                    className="flex-1 flex items-center justify-center gap-2"
                     size={isLargeText ? 'lg' : 'default'}
                     onClick={() => navigate('/home')}
                   >
-                    {isIconFocused && <RotateCcw className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />}
+                    <RotateCcw className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'}`} />
                     Reorder
                   </Button>
                   <Button
                     variant="outline"
-                    className="flex-1"
+                    className="flex-1 flex items-center justify-center gap-2"
                     size={isLargeText ? 'lg' : 'default'}
                     onClick={() => navigate(`/tracking/${order.id}`)}
                   >
-                    {isIconFocused && <FileText className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />}
+                    <FileText className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'}`} />
                     View Details
                   </Button>
                 </div>

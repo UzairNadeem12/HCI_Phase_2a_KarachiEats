@@ -73,7 +73,7 @@ const restaurants = [
 ];
 
 const Home = () => {
-  const { location, userGroup } = useApp();
+  const { location, settings } = useApp();
   const [searchQuery, setSearchQuery] = useState('');
   const [showLocationPicker, setShowLocationPicker] = useState(false);
   const [filters, setFilters] = useState<FilterState>({
@@ -83,8 +83,7 @@ const Home = () => {
     showClosedOnly: false,
   });
 
-  const isLargeText = userGroup === 'senior' || userGroup === 'disability';
-  const isIconFocused = userGroup === 'lowLiteracy';
+  const isLargeText = settings.largeText;
 
   const filteredRestaurants = restaurants.filter(r => {
     const matchesSearch = r.name.toLowerCase().includes(searchQuery.toLowerCase()) ||

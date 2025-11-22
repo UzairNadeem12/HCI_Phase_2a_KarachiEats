@@ -14,6 +14,8 @@ import OrderTracking from "./pages/OrderTracking";
 import OrderHistory from "./pages/OrderHistory";
 import Profile from "./pages/Profile";
 import Auth from "./pages/Auth";
+import VerifyOTP from "./pages/VerifyOTP";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -46,6 +48,8 @@ const App = () => (
                           <Route path="/order-history" element={<OrderHistory />} />
                           <Route path="/profile" element={<Profile />} />
                           <Route path="/auth" element={<Auth />} />
+                          <Route path="/verify-otp" element={<VerifyOTP />} />
+                          <Route path="/settings" element={<Settings />} />
                           <Route path="*" element={<NotFound />} />
                         </Routes>
                       </div>

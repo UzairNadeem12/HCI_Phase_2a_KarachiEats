@@ -180,87 +180,85 @@ const Checkout = () => {
           </h2>
           <div className="space-y-4">
             {cart.map(item => (
-              <div
-                key={item.id}
-                className="grid grid-cols-[70px_1fr] gap-4 pb-4 border-b border-border last:border-0"
-              >
-                {/* Image */}
-                {item.image && (
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className={`${isLargeText ? "w-20 h-20" : "w-16 h-16"} object-cover rounded`}
-                  />
-                )}
+                <div key={item.id}className="grid grid-cols-[70px_1fr] gap-4 pb-4 border-b border-border last:border-0">
+                  {/* Image */}
+                  {item.image && (
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className={`${isLargeText ? "w-20 h-20" : "w-16 h-16"} object-cover rounded`}
+                    />
+                  )}
 
-                {/* Text + price + buttons */}
-                <div className="flex flex-col justify-center w-full">
+                  {/* Name + Price + Buttons */}
+                  <div className="flex flex-col justify-center w-full">
 
-                  {/* Item name — always 1 line */}
-                  <h3
-                    className={`font-medium truncate ${
-                      isLargeText ? "text-xl" : ""
-                    }`}
-                  >
-                    {item.name}
-                  </h3>
-
-                  {/* Price + buttons row */}
-                  <div className="flex justify-between items-center mt-1">
-
-                    {/* Price left */}
-                    <p
-                      className={`text-primary font-semibold ${
-                        isLargeText ? "text-lg" : ""
+                    {/* ITEM NAME (Always 1 line) */}
+                    <h3
+                      className={`font-medium truncate ${
+                        isLargeText ? "text-xl" : ""
                       }`}
                     >
-                      Rs. {item.price}
-                    </p>
+                      {item.name}
+                    </h3>
 
-                    {/* Buttons right */}
-                    <div className="flex items-center gap-2">
+                    {/* SECOND LINE: Price LEFT — Buttons RIGHT */}
+                    <div className="flex justify-between items-center mt-2 w-full">
 
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        className={isLargeText ? "h-12 w-12" : "h-9 w-9"}
-                      >
-                        <Minus className={`${isLargeText ? "w-5 h-5" : "w-4 h-4"}`} />
-                      </Button>
-
-                      <span
-                        className={`min-w-[2rem] text-center font-medium ${
-                          isLargeText ? "text-xl" : "text-base"
+                      {/* PRICE */}
+                      <p
+                        className={`text-primary font-semibold ${
+                          isLargeText ? "text-lg" : ""
                         }`}
                       >
-                        {item.quantity}
-                      </span>
+                        Rs. {item.price}
+                      </p>
 
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className={isLargeText ? "h-12 w-12" : "h-9 w-9"}
-                      >
-                        <Plus className={`${isLargeText ? "w-5 h-5" : "w-4 h-4"}`} />
-                      </Button>
+                      {/* BUTTONS */}
+                      <div className="flex items-center gap-2">
 
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => removeFromCart(item.id)}
-                        className={isLargeText ? "h-12 w-12" : "h-9 w-9"}
-                      >
-                        <Trash2
-                          className={`${isLargeText ? "w-5 h-5" : "w-4 h-4"} text-destructive`}
-                        />
-                      </Button>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          className={isLargeText ? "h-12 w-12" : "h-9 w-9"}
+                        >
+                          <Minus className={`${isLargeText ? "w-5 h-5" : "w-4 h-4"}`} />
+                        </Button>
 
+                        <span
+                          className={`min-w-[2rem] text-center font-medium ${
+                            isLargeText ? "text-xl" : "text-base"
+                          }`}
+                        >
+                          {item.quantity}
+                        </span>
+
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          className={isLargeText ? "h-12 w-12" : "h-9 w-9"}
+                        >
+                          <Plus className={`${isLargeText ? "w-5 h-5" : "w-4 h-4"}`} />
+                        </Button>
+
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => removeFromCart(item.id)}
+                          className={isLargeText ? "h-12 w-12" : "h-9 w-9"}
+                        >
+                          <Trash2
+                            className={`${isLargeText ? "w-5 h-5" : "w-4 h-4"} text-destructive`}
+                          />
+                        </Button>
+
+                      </div>
                     </div>
+
                   </div>
                 </div>
-              </div>
               ))}
           </div>
         </Card>

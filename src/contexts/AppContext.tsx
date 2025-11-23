@@ -47,7 +47,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [userGroup, setUserGroup] = useState<UserGroup>(null);
-  const [location, setLocation] = useState<string>('Karachi, Pakistan');
+  const [location, setLocation] = useState<string>('Choose your location');
   const [cart, setCart] = useState<CartItem[]>([]);
   const [settings, setSettings] = useState<AppSettings>({
     language: 'en',

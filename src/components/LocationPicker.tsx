@@ -16,7 +16,8 @@ interface LocationPickerProps {
 const LocationPicker = ({ open, onClose }: LocationPickerProps) => {
   const { location, setLocation, settings, userInfo } = useApp();
   const { t } = useTranslation();
-  const [newLocation, setNewLocation] = useState(location);
+  const [newLocation, setNewLocation] = useState(
+  location === "Choose your location" ? "" : location);
   const [isSaving, setIsSaving] = useState(false);
 
   const isLargeText = settings.largeText;
@@ -78,7 +79,7 @@ const LocationPicker = ({ open, onClose }: LocationPickerProps) => {
             <div className="relative flex-1">
               <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               <Input
-                placeholder={t('enterYourLocation')}
+                placeholder={location === "Choose your location" ? "Choose your location" : t('enterYourLocation')}
                 value={newLocation}
                 onChange={(e) => setNewLocation(e.target.value)}
                 className={`pl-10 ${isLargeText ? 'h-14 text-lg' : 'h-12'}`}

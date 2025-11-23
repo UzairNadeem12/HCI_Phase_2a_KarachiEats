@@ -111,7 +111,9 @@ const Home = () => {
             >
               <MapPin className="w-5 h-5 text-primary" />
               <span className={`font-medium ${isLargeText ? 'text-lg' : 'text-sm'}`}>
-                {location}
+                {location === "" || location === "Choose your location"
+                  ? "Choose your location"
+                  : location}
               </span>
             </button>
           </div>

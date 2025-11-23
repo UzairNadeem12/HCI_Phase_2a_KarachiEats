@@ -31,6 +31,11 @@ const Checkout = () => {
   const total = cartTotal + deliveryFee;
 
   const handlePlaceOrder = async () => {
+    if (location === "Choose your location" || !location) {
+      toast.error("Please choose your location before placing an order.");
+      return;
+    }
+
     if (!guestName || !guestPhone || !guestEmail) {
       toast.error('Please fill in your contact details');
       return;

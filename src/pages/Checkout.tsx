@@ -180,7 +180,7 @@ const Checkout = () => {
           </h2>
           <div className="space-y-4">
             {cart.map(item => (
-                <div key={item.id}className="grid grid-cols-[70px_1fr] gap-4 pb-4 border-b border-border last:border-0">
+                <div key={item.id} className="grid grid-cols-[70px_1fr] gap-4 pb-4 border-b border-border last:border-0 w-full overflow-hidden">
                   {/* Image */}
                   {item.image && (
                     <img
@@ -191,7 +191,7 @@ const Checkout = () => {
                   )}
 
                   {/* Name + Price + Buttons */}
-                  <div className="flex flex-col justify-center w-full">
+                  <div className="flex flex-col justify-center w-full min-w-0">
 
                     {/* ITEM NAME (Always 1 line) */}
                     <h3
@@ -215,7 +215,7 @@ const Checkout = () => {
                       </p>
 
                       {/* BUTTONS */}
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 shrink-0">
 
                         <Button
                           variant="outline"

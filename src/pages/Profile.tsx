@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { User, Mail, Phone, MapPin, Edit2, Save, LogIn, History } from 'lucide-react';
 import { toast } from 'sonner';
-import { getUserData } from '@/services/appsScript';
+import { getUserData, updateProfile } from '@/services/appsScript';
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -55,16 +55,34 @@ const Profile = () => {
     fetchUserData();
   }, [userInfo?.email]);
 
-  const handleSave = () => {
-    setIsEditing(false);
-    if (userInfo) {
-      setUserInfo({
-        ...userInfo,
-        name: userData.name,
-        phone: userData.phone,
-      });
+  const handleSave = async () => {
+    if (!userInfo?.email) {
+      toast.error('Email not found');
+      return;
     }
-    toast.success('Profile updated successfully!');
+
+    try {
+      console.log('Updating profile:', { email: userInfo.email, name: userData.name, phone: userData.phone });
+      const result = await updateProfile(userInfo.email, userData.name, userData.phone);
+      
+      console.log('Update profile result:', result);
+      
+      if (result.success) {
+        // Update context
+        setUserInfo({
+          ...userInfo,
+          name: userData.name,
+          phone: userData.phone,
+        });
+        setIsEditing(false);
+        toast.success('Profile updated successfully!');
+      } else {
+        toast.error(result.error || 'Failed to update profile');
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast.error('Failed to update profile');
+    }
   };
 
   if (isLoading) {

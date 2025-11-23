@@ -8,11 +8,11 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LogIn, UserPlus, Mail, Lock, UserCircle } from 'lucide-react';
 import { toast } from 'sonner';
-import { sendSignup } from '@/services/appsScript';
+import { sendSignup, getUserData } from '@/services/appsScript';
 
 const Auth = () => {
   const navigate = useNavigate();
-  const { settings } = useApp();
+  const { settings, setUserInfo, setIsLoggedIn } = useApp();
   const [isLoading, setIsLoading] = useState(false);
   
   const [loginData, setLoginData] = useState({ email: '', password: '' });
@@ -30,12 +30,33 @@ const Auth = () => {
 
     setIsLoading(true);
     
-    // Login flow - currently limited by backend, storing credentials in localStorage for demo
     try {
-      localStorage.setItem('userEmail', loginData.email);
-      toast.success('Login successful!');
-      navigate('/home');
-    } catch (error) {
+      // Fetch user data from backend
+      console.log('Attempting login for email:', loginData.email);
+      const result = await getUserData(loginData.email);
+      
+      console.log('Login result:', result);
+      
+      if (result.success) {
+        // User exists in backend, set their info
+        const data = result as any;
+        console.log('User found, setting info:', data);
+        
+        setUserInfo({
+          email: data.email,
+          name: data.name,
+          phone: data.phone,
+          locations: data.locations,
+        });
+        setIsLoggedIn(true);
+        
+        toast.success('Login successful!');
+        navigate('/profile');
+      } else {
+        toast.error(result.error || 'User not found. Please sign up first.');
+      }
+    } catch (error) { 
+      console.error('Login error:', error);
       toast.error('Login failed');
     } finally {
       setIsLoading(false);

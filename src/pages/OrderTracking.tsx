@@ -4,34 +4,49 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Phone, MessageSquare, MapPin, CheckCircle2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { updateOrderStatus } from '@/services/appsScript';
 
 const OrderTracking = () => {
   const navigate = useNavigate();
   const { orderId } = useParams();
-  const { userGroup } = useApp();
+  const { userGroup, userInfo } = useApp();
   const [currentStep, setCurrentStep] = useState(0);
 
   const isLargeText = userGroup === 'senior' || userGroup === 'disability';
 
   const allSteps = [
-    { label: 'Order Confirmed', icon: '✓' },
-    { label: 'Preparing Food', icon: '🍳' },
-    { label: 'Out for Delivery', icon: '🚴' },
-    { label: 'Delivered', icon: '✅' },
+    { label: 'Order Confirmed', icon: '✓', status: 'confirmed' },
+    { label: 'Preparing Food', icon: '🍳', status: 'preparing' },
+    { label: 'Out for Delivery', icon: '🚴', status: 'out-for-delivery' },
+    { label: 'Delivered', icon: '✅', status: 'delivered' },
   ];
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const interval = setInterval(async () => {
       setCurrentStep(prev => {
-        if (prev < allSteps.length - 1) {
-          return prev + 1;
+        const newStep = prev < allSteps.length - 1 ? prev + 1 : prev;
+        
+        // Update backend with new status when step changes
+        if (newStep !== prev && userInfo?.email && orderId) {
+          const newStatus = allSteps[newStep].status;
+          console.log('Updating order status to:', newStatus);
+          updateOrderStatus(userInfo.email, orderId, newStatus)
+            .then(result => {
+              if (result.success) {
+                console.log('Order status updated in backend:', newStatus);
+              } else {
+                console.error('Failed to update order status:', result.error);
+              }
+            })
+            .catch(error => console.error('Error updating order status:', error));
         }
-        return prev;
+        
+        return newStep;
       });
     }, 10000); // Change status every 10 seconds
 
     return () => clearInterval(interval);
-  }, []);
+  }, [orderId, userInfo?.email]);
 
   const orderSteps = allSteps.map((step, index) => ({
     ...step,

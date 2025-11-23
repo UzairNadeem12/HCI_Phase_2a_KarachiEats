@@ -33,6 +33,17 @@ export interface OrderData {
   scheduledTime?: string;
 }
 
+export interface UpdateProfileData {
+  email: string;
+  name: string;
+  phone: string;
+}
+
+export interface UpdateStatusData {
+  email: string;
+  orderId: string;
+  newStatus: string;
+}
 export interface Order {
   id: string;
   email: string;
@@ -104,3 +115,11 @@ export const getOrderHistory = (email: string) =>
 
 export const addLocation = (email: string, location: string) => 
   callApi("addLocation", { email, location });
+
+// 1. Update Profile (Name & Phone only)
+export const updateProfile = (email: string, name: string, phone: string) => 
+  callApi("updateProfile", { email, name, phone });
+
+// 2. Update Order Status (e.g. "delivered", "cancelled")
+export const updateOrderStatus = (email: string, orderId: string, newStatus: string) => 
+  callApi("updateOrderStatus", { email, orderId, newStatus });

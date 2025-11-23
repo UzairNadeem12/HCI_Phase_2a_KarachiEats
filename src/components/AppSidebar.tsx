@@ -23,9 +23,17 @@ const menuItems = [
 
 export function AppSidebar() {
   const { state } = useSidebar();
-  const { settings } = useApp();
+  const { settings, isLoggedIn } = useApp();
   const collapsed = state === 'collapsed';
   const isLargeText = settings.largeText;
+
+  // Filter out Login option if user is logged in
+  const visibleMenuItems = menuItems.filter(item => {
+    if (item.title === 'Login' && isLoggedIn) {
+      return false;
+    }
+    return true;
+  });
 
   return (
     <Sidebar className={`${collapsed ? 'w-14' : 'w-60'} bg-card border-r border-border`} collapsible="icon">
@@ -36,7 +44,7 @@ export function AppSidebar() {
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {menuItems.map((item) => (
+              {visibleMenuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <NavLink

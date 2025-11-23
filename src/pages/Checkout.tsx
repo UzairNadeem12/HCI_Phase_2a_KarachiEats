@@ -31,6 +31,11 @@ const Checkout = () => {
   const total = cartTotal + deliveryFee;
 
   const handlePlaceOrder = async () => {
+    if (location === "Choose your location" || !location) {
+      toast.error("Please choose your location before placing an order.");
+      return;
+    }
+
     if (!guestName || !guestPhone || !guestEmail) {
       toast.error('Please fill in your contact details');
       return;
@@ -180,54 +185,85 @@ const Checkout = () => {
           </h2>
           <div className="space-y-4">
             {cart.map(item => (
-              <div key={item.id} className="grid grid-cols-[70px_1fr_auto] items-center gap-4 pb-4 border-b border-border last:border-0">
-                {item.image && (
-                  <img 
-                  src={item.image} 
-                  alt={item.name} 
-                  className={`${isLargeText ? 'w-20 h-20' : 'w-16 h-16'} object-cover rounded`}/>
-                )}
-                <div className="flex flex-col">
-                  <h3 className={`font-medium ${isLargeText ? 'text-xl' : ''}`}>{item.name}</h3>
-                  <p className={`text-primary font-semibold ${isLargeText ? 'text-lg' : ''}`}>
-                    Rs. {item.price}
-                  </p>
-                </div>
-                {/* <div className="flex items-center gap-2"> Asna*/}
-                <div className="flex items-center gap-2 justify-end w-full">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                    className={isLargeText ? 'h-12 w-12' : 'h-9 w-9'}
-                  >
-                    <Minus className={`${isLargeText ? 'w-5 h-5' : 'w-4 h-4'}`} />
-                  </Button>
-                  
-                  <span className={`min-w-[2.5rem] text-center font-medium ${isLargeText ? 'text-xl' : 'text-base'}`}>
-                    {item.quantity}
-                  </span>
+                <div
+                  key={item.id}
+                  className="grid grid-cols-[70px_1fr] gap-4 pb-4 border-b border-border last:border-0"
+                >
+                  {/* Image */}
+                  {item.image && (
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className={`${isLargeText ? "w-20 h-20" : "w-16 h-16"} object-cover rounded`}
+                    />
+                  )}
 
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                    className={isLargeText ? 'h-12 w-12' : 'h-9 w-9'}
-                  >
-                    <Plus className={`${isLargeText ? 'w-5 h-5' : 'w-4 h-4'}`} />
-                  </Button>
+                  {/* RIGHT SIDE */}
+                  <div className="flex flex-col w-full min-w-0">
 
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => removeFromCart(item.id)}
-                    className={isLargeText ? 'h-12 w-12' : 'h-9 w-9'}
-                  >
-                    <Trash2 className={`${isLargeText ? 'w-5 h-5' : 'w-4 h-4'} text-destructive`} />
-                  </Button>
+                    {/* LINE 1: NAME */}
+                    <h3
+                      className={`font-medium truncate ${
+                        isLargeText ? "text-xl" : ""
+                      }`}
+                    >
+                      {item.name}
+                    </h3>
+
+                    {/* LINE 2: PRICE */}
+                    <p
+                      className={`text-primary font-semibold mt-1 ${
+                        isLargeText ? "text-lg" : ""
+                      }`}
+                    >
+                      Rs. {item.price}
+                    </p>
+
+                    {/* LINE 3: ACTION BUTTONS */}
+                    <div className="flex items-center gap-2 mt-2">
+
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                        className={isLargeText ? "h-12 w-12" : "h-9 w-9"}
+                      >
+                        <Minus className={`${isLargeText ? "w-5 h-5" : "w-4 h-4"}`} />
+                      </Button>
+
+                      <span
+                        className={`min-w-[2rem] text-center font-medium ${
+                          isLargeText ? "text-xl" : "text-base"
+                        }`}
+                      >
+                        {item.quantity}
+                      </span>
+
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        className={isLargeText ? "h-12 w-12" : "h-9 w-9"}
+                      >
+                        <Plus className={`${isLargeText ? "w-5 h-5" : "w-4 h-4"}`} />
+                      </Button>
+
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => removeFromCart(item.id)}
+                        className={isLargeText ? "h-12 w-12" : "h-9 w-9"}
+                      >
+                        <Trash2
+                          className={`${isLargeText ? "w-5 h-5" : "w-4 h-4"} text-destructive`}
+                        />
+                      </Button>
+
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
+
+              ))}
           </div>
         </Card>
 
@@ -313,7 +349,15 @@ const Checkout = () => {
                     id="cardExpiry"
                     placeholder="MM/YY"
                     value={cardExpiry}
-                    onChange={(e) => setCardExpiry(e.target.value)}
+                    onChange={(e) => {
+                      let value = e.target.value.replace(/\D/g, ""); 
+
+                      if (value.length >= 2) {
+                        value = value.slice(0, 2) + "/" + value.slice(2, 4);
+                      }
+
+                      setCardExpiry(value);
+                    }}
                     className={isLargeText ? 'h-14 text-lg mt-2' : 'mt-2'}
                     maxLength={5}
                   />

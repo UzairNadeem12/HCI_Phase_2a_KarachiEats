@@ -143,6 +143,34 @@ export const translations = {
     goToLogin: 'Go to Login',
     location: 'Location',
     paymentLabel: 'Payment',
+
+    // Order Tracking
+    orderPlacedSuccessfully: 'Order Placed Successfully!',
+    orderStatus: 'Order Status',
+    orderConfirmed: 'Order Confirmed',
+    preparingFood: 'Preparing Food',
+    outForDelivery: 'Out for Delivery',
+    delivered: 'Delivered',
+    yourDeliveryRider: 'Your Delivery Rider',
+    rating: 'Rating',
+    call: 'Call',
+    chat: 'Chat',
+    liveTracking: 'Live Tracking',
+    mapView: 'Map View',
+    estimatedArrival: 'Estimated arrival',
+    minutes: 'minutes',
+    backToHome: 'Back to Home',
+
+    // Location Picker
+    changeLocation: 'Change Location',
+    enterYourLocation: 'Enter your location',
+    popularLocations: 'Popular Locations',
+    saveLocation: 'Save Location',
+    saving: 'Saving...',
+    pleaseEnterLocation: 'Please enter a location',
+    locationSavedSuccessfully: 'Location saved successfully!',
+    failedToSaveLocation: 'Failed to save location',
+    locationUpdated: 'Location updated!',
     
     // Settings
     language: 'Language',
@@ -327,6 +355,34 @@ export const translations = {
     goToLogin: 'لاگ ان پر جائیں',
     location: 'مقام',
     paymentLabel: 'ادائیگی',
+
+    // Order Tracking
+    orderPlacedSuccessfully: 'آرڈر کامیابی سے دے دیا گیا!',
+    orderStatus: 'آرڈر کی حالت',
+    orderConfirmed: 'آرڈر کی تصدیق ہو گئی',
+    preparingFood: 'کھانا تیار ہو رہا ہے',
+    outForDelivery: 'ڈیلیوری کے لیے روانہ',
+    delivered: 'پہنچا دیا گیا',
+    yourDeliveryRider: 'آپ کا ڈیلیوری رائیڈر',
+    rating: 'درجہ بندی',
+    call: 'فون کریں',
+    chat: 'چیٹ کریں',
+    liveTracking: 'براہ راست ٹریکنگ',
+    mapView: 'نقشہ',
+    estimatedArrival: 'تخمینی پہنچنے کا وقت',
+    minutes: 'منٹ',
+    backToHome: 'ہوم پر واپس',
+
+    // Location Picker
+    changeLocation: 'مقام تبدیل کریں',
+    enterYourLocation: 'اپنا مقام درج کریں',
+    popularLocations: 'مشہور مقامات',
+    saveLocation: 'مقام محفوظ کریں',
+    saving: 'محفوظ ہو رہا ہے...',
+    pleaseEnterLocation: 'براہ کرم کوئی مقام درج کریں',
+    locationSavedSuccessfully: 'مقام کامیابی سے محفوظ ہو گیا!',
+    failedToSaveLocation: 'مقام محفوظ کرنے میں ناکامی',
+    locationUpdated: 'مقام اپ ڈیٹ ہو گیا!',
     
     // Settings
     language: 'زبان',

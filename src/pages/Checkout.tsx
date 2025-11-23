@@ -180,7 +180,7 @@ const Checkout = () => {
           </h2>
           <div className="space-y-4">
             {cart.map(item => (
-              <div key={item.id} className="grid grid-cols-[70px_1fr_120px] items-center gap-4 pb-4 border-b border-border last:border-0">
+              <div key={item.id} className="grid grid-cols-[70px_1fr_auto] items-center gap-4 pb-4 border-b border-border last:border-0">
                 {item.image && (
                   <img 
                   src={item.image} 
@@ -216,7 +216,7 @@ const Checkout = () => {
                   >
                     <Plus className={`${isLargeText ? 'w-5 h-5' : 'w-4 h-4'}`} />
                   </Button>
-                  
+
                   <Button
                     variant="ghost"
                     size="icon"

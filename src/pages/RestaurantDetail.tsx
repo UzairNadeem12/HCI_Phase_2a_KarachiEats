@@ -87,7 +87,7 @@ const RestaurantDetail = () => {
           <div className="flex items-center justify-between">
             <Button variant="ghost" onClick={() => navigate(-1)} size={isLargeText ? "lg" : "default"}>
               <ArrowLeft className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />
-              Back
+              {t('back')}
             </Button>
           </div>
         </div>
@@ -122,7 +122,7 @@ const RestaurantDetail = () => {
       {/* Menu */}
       <main className="container mx-auto px-4 py-6">
         <h2 className={`font-bold ${isLargeText ? 'text-3xl' : 'text-2xl'} mb-6`}>
-          Menu
+          {t('menu')}
         </h2>
         
         <div className="space-y-4">
@@ -172,7 +172,7 @@ const RestaurantDetail = () => {
                     size={isLargeText ? "default" : "default"}
                     className={`${isLargeText ? 'h-12 px-6' : ''} whitespace-nowrap`}
                   >
-                    Add to Cart
+                    {t('addToCart')}
                   </Button>
                 </div>
               </div>

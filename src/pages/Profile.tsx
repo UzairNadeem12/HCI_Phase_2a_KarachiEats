@@ -66,13 +66,13 @@ const Profile = () => {
         phone: userData.phone,
       });
     }
-    toast.success('Profile updated successfully!');
+    toast.success(t('profileUpdated'));
   };
 
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <p className="text-muted-foreground">Loading profile...</p>
+        <p className="text-muted-foreground">{t('loadingProfile')}</p>
       </div>
     );
   }
@@ -81,7 +81,7 @@ const Profile = () => {
     <div className="min-h-screen bg-background">
       <main className="container mx-auto px-4 py-6 max-w-2xl">
         <h1 className={`font-bold ${isLargeText ? 'text-4xl' : 'text-3xl'} mb-6`}>
-          Profile
+          {t('profile')}
         </h1>
 
         {/* Profile Header */}
@@ -96,7 +96,7 @@ const Profile = () => {
               {userData.name}
             </h2>
             <p className={`text-muted-foreground ${isLargeText ? 'text-lg' : ''}`}>
-              {isLoggedIn ? 'Registered Account' : 'Guest Account'}
+              {isLoggedIn ? t('registeredAccount') : t('guestAccount')}
             </p>
           </div>
 
@@ -110,12 +110,12 @@ const Profile = () => {
               {isEditing ? (
                 <>
                   <Save className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />
-                  Save Changes
+                  {t('saveChanges')}
                 </>
               ) : (
                 <>
                   <Edit2 className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />
-                  Edit Profile
+                  {t('editProfile')}
                 </>
               )}
             </Button>
@@ -125,13 +125,13 @@ const Profile = () => {
         {/* Profile Information */}
         <Card className="p-6 mb-6">
           <h3 className={`font-semibold ${isLargeText ? 'text-2xl' : 'text-xl'} mb-4`}>
-            Personal Information
+            {t('personalInformation')}
           </h3>
           <div className="space-y-4">
             <div>
               <Label htmlFor="email" className={`flex items-center gap-2 mb-2 ${isLargeText ? 'text-lg' : ''}`}>
                 <Mail className="w-4 h-4" />
-                Email
+                {t('emailLabel')}
               </Label>
               <p className={`text-muted-foreground ${isLargeText ? 'text-lg' : ''} pl-6`}>
                 {userData.email}
@@ -141,7 +141,7 @@ const Profile = () => {
             <div>
               <Label htmlFor="name" className={`flex items-center gap-2 mb-2 ${isLargeText ? 'text-lg' : ''}`}>
                 <User className="w-4 h-4" />
-                Name
+                {t('nameLabel')}
               </Label>
               {isEditing && isLoggedIn ? (
                 <Input
@@ -160,7 +160,7 @@ const Profile = () => {
             <div>
               <Label htmlFor="phone" className={`flex items-center gap-2 mb-2 ${isLargeText ? 'text-lg' : ''}`}>
                 <Phone className="w-4 h-4" />
-                Phone
+                {t('phoneLabel')}
               </Label>
               {isEditing && isLoggedIn ? (
                 <Input
@@ -179,7 +179,7 @@ const Profile = () => {
             <div>
               <Label className={`flex items-center gap-2 mb-2 ${isLargeText ? 'text-lg' : ''}`}>
                 <MapPin className="w-4 h-4" />
-                Default Location
+                {t('defaultLocation')}
               </Label>
               <p className={`text-muted-foreground ${isLargeText ? 'text-lg' : ''} pl-6`}>{location}</p>
             </div>
@@ -188,7 +188,7 @@ const Profile = () => {
               <div>
                 <Label className={`flex items-center gap-2 mb-2 ${isLargeText ? 'text-lg' : ''}`}>
                   <MapPin className="w-4 h-4" />
-                  Saved Locations
+                  {t('savedLocations')}
                 </Label>
                 <div className="pl-6 space-y-1">
                   {userData.locations.map((loc, idx) => (
@@ -203,7 +203,7 @@ const Profile = () => {
 
           {isEditing && isLoggedIn && (
             <Button onClick={handleSave} className="w-full mt-6" size={isLargeText ? 'lg' : 'default'}>
-              Save Changes
+              {t('saveChanges')}
             </Button>
           )}
         </Card>
@@ -211,7 +211,7 @@ const Profile = () => {
         {/* Account Actions */}
         <Card className="p-6">
           <h3 className={`font-semibold ${isLargeText ? 'text-2xl' : 'text-xl'} mb-4`}>
-            Account
+            {t('account')}
           </h3>
           <div className="space-y-3">
             {!isLoggedIn && (
@@ -222,7 +222,7 @@ const Profile = () => {
                 onClick={() => navigate('/auth')}
               >
                 <LogIn className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'}`} />
-                Login / Sign Up
+                {t('loginSignup')}
               </Button>
             )}
             <Button
@@ -232,7 +232,7 @@ const Profile = () => {
               onClick={() => navigate('/order-history')}
             >
               <History className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'}`} />
-              View Order History
+              {t('viewOrderHistory')}
             </Button>
           </div>
         </Card>

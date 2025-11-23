@@ -9,10 +9,12 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { User, Mail, Phone, MapPin, Edit2, Save, LogIn, History } from 'lucide-react';
 import { toast } from 'sonner';
 import { getUserData } from '@/services/appsScript';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const Profile = () => {
   const navigate = useNavigate();
   const { settings, location, isLoggedIn, userInfo, setUserInfo } = useApp();
+  const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState({

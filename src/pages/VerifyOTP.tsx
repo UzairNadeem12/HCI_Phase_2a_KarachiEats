@@ -8,11 +8,13 @@ import { Label } from '@/components/ui/label';
 import { ArrowLeft, Shield } from 'lucide-react';
 import { toast } from 'sonner';
 import { verifyOTP, getUserData } from '@/services/appsScript';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const VerifyOTP = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { setUserInfo, setIsLoggedIn, settings } = useApp();
+  const { t } = useTranslation();
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
 

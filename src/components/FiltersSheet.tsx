@@ -6,6 +6,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Slider } from '@/components/ui/slider';
 import { SlidersHorizontal } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export interface FilterState {
   cuisine: string;
@@ -19,15 +20,15 @@ interface FiltersSheetProps {
   onFiltersChange: (filters: FilterState) => void;
 }
 
-const cuisineOptions = ['All', 'Pakistani', 'Italian', 'Fast Food', 'Japanese', 'BBQ', 'Café'];
-
 const FiltersSheet = ({ filters, onFiltersChange }: FiltersSheetProps) => {
-  const { userGroup } = useApp();
+  const { settings } = useApp();
+  const { t } = useTranslation();
   const [localFilters, setLocalFilters] = useState(filters);
   const [open, setOpen] = useState(false);
 
-  const isLargeText = userGroup === 'senior' || userGroup === 'disability';
-  const isIconFocused = userGroup === 'lowLiteracy';
+  const isLargeText = settings.largeText;
+
+  const cuisineOptions = [t('all'), 'Pakistani', 'Italian', 'Fast Food', 'Japanese', 'BBQ', 'Café'];
 
   const handleApply = () => {
     onFiltersChange(localFilters);
@@ -50,20 +51,20 @@ const FiltersSheet = ({ filters, onFiltersChange }: FiltersSheetProps) => {
       <SheetTrigger asChild>
         <Button variant="outline" size={isLargeText ? 'lg' : 'default'}>
           <SlidersHorizontal className="w-5 h-5" />
-          {!isIconFocused && <span className="ml-2 hidden sm:inline">Filters</span>}
+          <span className="ml-2 hidden sm:inline">{t('filters')}</span>
         </Button>
       </SheetTrigger>
       <SheetContent className="overflow-y-auto">
         <SheetHeader>
           <SheetTitle className={isLargeText ? 'text-2xl' : 'text-xl'}>
-            {isIconFocused ? '🔍 Filters' : 'Filters'}
+            {t('filters')}
           </SheetTitle>
         </SheetHeader>
 
         <div className="space-y-6 py-6">
           {/* Cuisine Filter */}
           <div className="space-y-3">
-            <Label className={isLargeText ? 'text-lg' : ''}>Cuisine Type</Label>
+            <Label className={isLargeText ? 'text-lg' : ''}>{t('cuisine')}</Label>
             <RadioGroup
               value={localFilters.cuisine}
               onValueChange={(value) => setLocalFilters({ ...localFilters, cuisine: value })}
@@ -82,7 +83,7 @@ const FiltersSheet = ({ filters, onFiltersChange }: FiltersSheetProps) => {
           {/* Max Delivery Fee */}
           <div className="space-y-3">
             <Label className={isLargeText ? 'text-lg' : ''}>
-              Max Delivery Fee: Rs. {localFilters.maxDeliveryFee}
+              {t('maxDeliveryFee')}: Rs. {localFilters.maxDeliveryFee}
             </Label>
             <Slider
               value={[localFilters.maxDeliveryFee]}
@@ -97,7 +98,7 @@ const FiltersSheet = ({ filters, onFiltersChange }: FiltersSheetProps) => {
           {/* Minimum Rating */}
           <div className="space-y-3">
             <Label className={isLargeText ? 'text-lg' : ''}>
-              Minimum Rating: {localFilters.minRating === 0 ? 'Any' : localFilters.minRating}
+              {t('minRating')}: {localFilters.minRating === 0 ? t('any') : localFilters.minRating}
             </Label>
             <Slider
               value={[localFilters.minRating]}
@@ -111,7 +112,7 @@ const FiltersSheet = ({ filters, onFiltersChange }: FiltersSheetProps) => {
 
           {/* Show Open/Closed */}
           <div className="space-y-3">
-            <Label className={isLargeText ? 'text-lg' : ''}>Restaurant Status</Label>
+            <Label className={isLargeText ? 'text-lg' : ''}>{t('showOpenOnly')}</Label>
             <RadioGroup
               value={localFilters.showClosedOnly ? 'closed' : 'open'}
               onValueChange={(value) =>
@@ -121,13 +122,13 @@ const FiltersSheet = ({ filters, onFiltersChange }: FiltersSheetProps) => {
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="open" id="open" />
                 <Label htmlFor="open" className={`cursor-pointer ${isLargeText ? 'text-base' : ''}`}>
-                  Open Only
+                  {t('openOnly')}
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="closed" id="closed" />
                 <Label htmlFor="closed" className={`cursor-pointer ${isLargeText ? 'text-base' : ''}`}>
-                  Show All
+                  {t('showAll')}
                 </Label>
               </div>
             </RadioGroup>
@@ -141,10 +142,10 @@ const FiltersSheet = ({ filters, onFiltersChange }: FiltersSheetProps) => {
               className="flex-1"
               size={isLargeText ? 'lg' : 'default'}
             >
-              Reset
+              {t('resetFilters')}
             </Button>
             <Button onClick={handleApply} className="flex-1" size={isLargeText ? 'lg' : 'default'}>
-              Apply Filters
+              {t('applyFilters')}
             </Button>
           </div>
         </div>

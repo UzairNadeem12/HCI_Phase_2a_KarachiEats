@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LogIn, UserPlus, Mail, Lock, UserCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import { sendSignup } from '@/services/appsScript';
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -15,38 +16,71 @@ const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
   
   const [loginData, setLoginData] = useState({ email: '', password: '' });
-  const [signupData, setSignupData] = useState({ name: '', email: '', password: '', confirmPassword: '' });
+  const [signupData, setSignupData] = useState({ name: '', email: '', phone: '', location: '', password: '', confirmPassword: '' });
 
   const isLargeText = settings.largeText;
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     
-    // Simulate login
-    setTimeout(() => {
-      setIsLoading(false);
-      toast.success('Login successful!');
-      navigate('/home');
-    }, 1500);
-  };
-
-  const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (signupData.password !== signupData.confirmPassword) {
-      toast.error('Passwords do not match');
+    if (!loginData.email || !loginData.password) {
+      toast.error('Please fill in all fields');
       return;
     }
 
     setIsLoading(true);
     
-    // Simulate signup
-    setTimeout(() => {
-      setIsLoading(false);
-      toast.success('Account created successfully!');
+    // Login flow - currently limited by backend, storing credentials in localStorage for demo
+    try {
+      localStorage.setItem('userEmail', loginData.email);
+      toast.success('Login successful!');
       navigate('/home');
-    }, 1500);
+    } catch (error) {
+      toast.error('Login failed');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!signupData.name || !signupData.email || !signupData.phone || !signupData.location) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
+
+    if (signupData.password !== signupData.confirmPassword) {
+      toast.error('Passwords do not match');
+      return;
+    }
+
+    if (signupData.password.length < 6) {
+      toast.error('Password must be at least 6 characters');
+      return;
+    }
+
+    setIsLoading(true);
+    
+    try {
+      const result = await sendSignup({
+        email: signupData.email,
+        name: signupData.name,
+        phone: signupData.phone,
+        location: signupData.location,
+      });
+
+      if (result.success) {
+        toast.success('Account created! Check your email for OTP.');
+        navigate('/verify-otp', { state: { email: signupData.email } });
+      } else {
+        toast.error(result.error || 'Signup failed');
+      }
+    } catch (error) {
+      toast.error('Signup failed');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -145,6 +179,34 @@ const Auth = () => {
                   placeholder="your@email.com"
                   value={signupData.email}
                   onChange={(e) => setSignupData({ ...signupData, email: e.target.value })}
+                  className={isLargeText ? 'h-14 text-lg mt-2' : 'mt-2'}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="signup-phone" className={`${isLargeText ? 'text-lg' : ''} flex items-center gap-2`}>
+                  Phone
+                </Label>
+                <Input
+                  id="signup-phone"
+                  type="tel"
+                  placeholder="03XX-XXXXXXX"
+                  value={signupData.phone}
+                  onChange={(e) => setSignupData({ ...signupData, phone: e.target.value })}
+                  className={isLargeText ? 'h-14 text-lg mt-2' : 'mt-2'}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="signup-location" className={`${isLargeText ? 'text-lg' : ''} flex items-center gap-2`}>
+                  Location
+                </Label>
+                <Input
+                  id="signup-location"
+                  type="text"
+                  placeholder="Your address"
+                  value={signupData.location}
+                  onChange={(e) => setSignupData({ ...signupData, location: e.target.value })}
                   className={isLargeText ? 'h-14 text-lg mt-2' : 'mt-2'}
                   required
                 />

@@ -49,262 +49,266 @@ This document explains how to set up the Google Apps Script backend to work with
 3. Copy and paste the following code:
 
 ```javascript
+// =====================================================
+//                 KARACHI EATS BACKEND
+// =====================================================
+
 // ==================== CONFIGURATION ====================
 const USERS_SHEET = 'Users';
 const ORDERS_SHEET = 'Orders';
 const OTPS_SHEET = 'OTPs';
 const OTP_EXPIRY_MINUTES = 10;
 
-// ==================== UTILITY FUNCTIONS ====================
+// ==================== CORE HELPERS ====================
 
-function getSheetByName(sheetName) {
-  return SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
+// CORS Response Wrapper
+function corsResponse_(payload) {
+  return ContentService
+    .createTextOutput(JSON.stringify(payload))
+    .setMimeType(ContentService.MimeType.JSON);
 }
 
-function generateOTP() {
+// Success Wrapper
+function success_(data = {}) {
+  return { success: true, ...data };
+}
+
+// Error Wrapper
+function error_(msg) {
+  return { success: false, error: msg };
+}
+
+// Ensure Sheet Exists
+function ensureSheet_(name) {
+  const sheet = SpreadsheetApp.getActive().getSheetByName(name);
+  if (!sheet) throw new Error(`Sheet not found: ${name}`);
+  return sheet;
+}
+
+// Local Time (Pakistan Standard Time)
+function localTimeISO_() {
+  const now = new Date();
+  return Utilities.formatDate(now, "Asia/Karachi", "yyyy-MM-dd HH:mm:ss");
+}
+
+function generateOTP_() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-function generateOrderId() {
-  return 'ORD' + Date.now() + Math.floor(Math.random() * 1000);
+function generateOrderId_() {
+  return "ORD-" + Date.now() + "-" + Math.floor(Math.random() * 900);
 }
 
-function sendOTPEmail(email, otp) {
-  const subject = 'Your Karachi Eats Verification Code';
-  const body = `Your OTP code is: ${otp}\n\nThis code will expire in ${OTP_EXPIRY_MINUTES} minutes.\n\nIf you didn't request this code, please ignore this email.`;
-  
+// Email OTP Sender
+function sendOTPEmail_(email, otp) {
   try {
-    MailApp.sendEmail(email, subject, body);
+    MailApp.sendEmail(
+      email,
+      "Your Karachi Eats Verification Code",
+      `Your OTP code is: ${otp}\nIt will expire in ${OTP_EXPIRY_MINUTES} minutes.`
+    );
     return true;
   } catch (e) {
-    Logger.log('Error sending email: ' + e.toString());
+    Logger.log("Email error: " + e);
     return false;
   }
 }
 
-// ==================== USER MANAGEMENT ====================
+// =====================================================
+//               USER MANAGEMENT
+// =====================================================
 
-function handleSignup(data) {
-  const usersSheet = getSheetByName(USERS_SHEET);
-  const otpsSheet = getSheetByName(OTPS_SHEET);
-  
-  // Check if user already exists
-  const existingUsers = usersSheet.getDataRange().getValues();
-  for (let i = 1; i < existingUsers.length; i++) {
-    if (existingUsers[i][0] === data.email) {
-      return { success: false, error: 'User already exists' };
-    }
+function signup_(data) {
+  const usersSheet = ensureSheet_(USERS_SHEET);
+  const otpsSheet = ensureSheet_(OTPS_SHEET);
+
+  const allUsers = usersSheet.getDataRange().getValues();
+
+  // Check duplicate user
+  for (let i = 1; i < allUsers.length; i++) {
+    if (allUsers[i][0] === data.email) return error_("User already exists");
   }
-  
-  // Generate OTP
-  const otp = generateOTP();
-  const now = new Date();
-  const expiresAt = new Date(now.getTime() + OTP_EXPIRY_MINUTES * 60000);
-  
+
+  const otp = generateOTP_();
+  const now = localTimeISO_();
+
+  // Calculate expiry
+  const expiresAt = new Date();
+  expiresAt.setMinutes(expiresAt.getMinutes() + OTP_EXPIRY_MINUTES);
+
   // Save OTP
-  otpsSheet.appendRow([
-    data.email,
-    otp,
-    now.toISOString(),
-    expiresAt.toISOString()
-  ]);
-  
+  otpsSheet.appendRow([data.email, otp, now, expiresAt.toISOString()]);
+
   // Save user (unverified)
   usersSheet.appendRow([
     data.email,
     data.name,
     data.phone,
-    data.location,
-    false, // Not verified yet
-    now.toISOString()
+    data.location || "",
+    false, // verified?
+    now
   ]);
-  
-  // Send OTP email
-  const emailSent = sendOTPEmail(data.email, otp);
-  
-  if (!emailSent) {
-    return { success: false, error: 'Failed to send OTP email' };
+
+  // Send OTP Email
+  if (!sendOTPEmail_(data.email, otp)) {
+    return error_("Failed to send OTP email");
   }
-  
-  return { success: true };
+
+  return success_();
 }
 
-function handleVerifyOTP(email, otp) {
-  const otpsSheet = getSheetByName(OTPS_SHEET);
-  const usersSheet = getSheetByName(USERS_SHEET);
-  
-  const otpData = otpsSheet.getDataRange().getValues();
+function verifyOTP_(email, otp) {
+  const otpsSheet = ensureSheet_(OTPS_SHEET);
+  const usersSheet = ensureSheet_(USERS_SHEET);
   const now = new Date();
-  
-  // Find matching OTP
-  for (let i = otpData.length - 1; i >= 1; i--) {
-    if (otpData[i][0] === email && otpData[i][1] === otp) {
-      const expiresAt = new Date(otpData[i][3]);
-      
-      if (now > expiresAt) {
-        return { success: false, error: 'OTP has expired' };
-      }
-      
-      // Mark user as verified
-      const userData = usersSheet.getDataRange().getValues();
-      for (let j = 1; j < userData.length; j++) {
-        if (userData[j][0] === email) {
+
+  const otpRows = otpsSheet.getDataRange().getValues();
+
+  for (let i = otpRows.length - 1; i >= 1; i--) {
+    if (otpRows[i][0] === email && otpRows[i][1] === otp) {
+      const expiry = new Date(otpRows[i][3]);
+
+      if (now > expiry) return error_("OTP expired");
+
+      // Mark verified
+      const users = usersSheet.getDataRange().getValues();
+      for (let j = 1; j < users.length; j++) {
+        if (users[j][0] === email) {
           usersSheet.getRange(j + 1, 5).setValue(true);
-          
-          // Delete used OTP
           otpsSheet.deleteRow(i + 1);
-          
-          return { success: true };
+          return success_();
         }
       }
     }
   }
-  
-  return { success: false, error: 'Invalid OTP' };
+
+  return error_("Invalid OTP");
 }
 
-function handleGetUser(email) {
-  const usersSheet = getSheetByName(USERS_SHEET);
-  const userData = usersSheet.getDataRange().getValues();
-  
-  for (let i = 1; i < userData.length; i++) {
-    if (userData[i][0] === email) {
-      return {
-        success: true,
-        data: {
-          email: userData[i][0],
-          name: userData[i][1],
-          phone: userData[i][2],
-          locations: userData[i][3] ? userData[i][3].split(',') : [],
-          verified: userData[i][4]
-        }
-      };
+function getUser_(email) {
+  const sheet = ensureSheet_(USERS_SHEET);
+  const data = sheet.getDataRange().getValues();
+
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0] === email) {
+      return success_({
+        email: data[i][0],
+        name: data[i][1],
+        phone: data[i][2],
+        locations: data[i][3] ? data[i][3].split(",") : [],
+        verified: data[i][4]
+      });
     }
   }
-  
-  return { success: false, error: 'User not found' };
+
+  return error_("User not found");
 }
 
-function handleAddLocation(email, location) {
-  const usersSheet = getSheetByName(USERS_SHEET);
-  const userData = usersSheet.getDataRange().getValues();
-  
-  for (let i = 1; i < userData.length; i++) {
-    if (userData[i][0] === email) {
-      const currentLocations = userData[i][3] ? userData[i][3].split(',') : [];
-      if (!currentLocations.includes(location)) {
-        currentLocations.push(location);
-        usersSheet.getRange(i + 1, 4).setValue(currentLocations.join(','));
+function addLocation_(email, location) {
+  const sheet = ensureSheet_(USERS_SHEET);
+  const data = sheet.getDataRange().getValues();
+
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0] === email) {
+      const locs = data[i][3] ? data[i][3].split(",") : [];
+      if (!locs.includes(location)) {
+        locs.push(location);
+        sheet.getRange(i + 1, 4).setValue(locs.join(","));
       }
-      return { success: true };
+      return success_();
     }
   }
-  
-  return { success: false, error: 'User not found' };
+
+  return error_("User not found");
 }
 
-// ==================== ORDER MANAGEMENT ====================
+// =====================================================
+//                  ORDER MANAGEMENT
+// =====================================================
 
-function handleSaveOrder(orderData) {
-  const ordersSheet = getSheetByName(ORDERS_SHEET);
-  const orderId = generateOrderId();
-  
-  ordersSheet.appendRow([
-    orderId,
+function saveOrder_(orderData) {
+  const sheet = ensureSheet_(ORDERS_SHEET);
+  const id = generateOrderId_();
+
+  sheet.appendRow([
+    id,
     orderData.email,
     orderData.name,
     orderData.phone,
     orderData.location,
-    JSON.stringify(orderData.items),
+    JSON.stringify(orderData.items || []),
     orderData.total,
     orderData.paymentMethod,
-    orderData.scheduledTime || '',
-    orderData.timestamp,
-    'pending'
+    orderData.scheduledTime || "",
+    localTimeISO_(),
+    "pending"
   ]);
-  
-  return { success: true, orderId: orderId };
+
+  return success_({ orderId: id });
 }
 
-function handleGetOrders(email) {
-  const ordersSheet = getSheetByName(ORDERS_SHEET);
-  const ordersData = ordersSheet.getDataRange().getValues();
+function getOrders_(email) {
+  const sheet = ensureSheet_(ORDERS_SHEET);
+  const rows = sheet.getDataRange().getValues();
+
   const orders = [];
-  
-  for (let i = 1; i < ordersData.length; i++) {
-    if (ordersData[i][1] === email) {
+
+  for (let i = 1; i < rows.length; i++) {
+    if (rows[i][1] === email) {
       orders.push({
-        id: ordersData[i][0],
-        email: ordersData[i][1],
-        name: ordersData[i][2],
-        phone: ordersData[i][3],
-        location: ordersData[i][4],
-        items: JSON.parse(ordersData[i][5]),
-        total: ordersData[i][6],
-        paymentMethod: ordersData[i][7],
-        scheduledTime: ordersData[i][8],
-        timestamp: ordersData[i][9],
-        status: ordersData[i][10]
+        id: rows[i][0],
+        email: rows[i][1],
+        name: rows[i][2],
+        phone: rows[i][3],
+        location: rows[i][4],
+        items: JSON.parse(rows[i][5]),
+        total: rows[i][6],
+        paymentMethod: rows[i][7],
+        scheduledTime: rows[i][8],
+        timestamp: rows[i][9],
+        status: rows[i][10]
       });
     }
   }
-  
-  return { success: true, orders: orders };
+
+  return success_({ orders });
 }
 
-// ==================== MAIN HANDLER ====================
+// =====================================================
+//                MAIN ROUTING (CORS INCLUDED)
+// =====================================================
+
+function doOptions() {
+  return HtmlService.createHtmlOutput("")
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
+    .setSandboxMode(HtmlService.SandboxMode.IFRAME);
+}
 
 function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
-    
-    switch (data.action) {
-      case 'signup':
-        return ContentService.createTextOutput(
-          JSON.stringify(handleSignup(data.data))
-        ).setMimeType(ContentService.MimeType.JSON);
-        
-      case 'verifyOTP':
-        return ContentService.createTextOutput(
-          JSON.stringify(handleVerifyOTP(data.email, data.otp))
-        ).setMimeType(ContentService.MimeType.JSON);
-        
-      case 'getUser':
-        return ContentService.createTextOutput(
-          JSON.stringify(handleGetUser(data.email))
-        ).setMimeType(ContentService.MimeType.JSON);
-        
-      case 'addLocation':
-        return ContentService.createTextOutput(
-          JSON.stringify(handleAddLocation(data.email, data.location))
-        ).setMimeType(ContentService.MimeType.JSON);
-        
-      case 'saveOrder':
-        return ContentService.createTextOutput(
-          JSON.stringify(handleSaveOrder(data.data))
-        ).setMimeType(ContentService.MimeType.JSON);
-        
-      case 'getOrders':
-        return ContentService.createTextOutput(
-          JSON.stringify(handleGetOrders(data.email))
-        ).setMimeType(ContentService.MimeType.JSON);
-        
-      default:
-        return ContentService.createTextOutput(
-          JSON.stringify({ success: false, error: 'Invalid action' })
-        ).setMimeType(ContentService.MimeType.JSON);
-    }
-  } catch (error) {
-    Logger.log('Error: ' + error.toString());
-    return ContentService.createTextOutput(
-      JSON.stringify({ success: false, error: error.toString() })
-    ).setMimeType(ContentService.MimeType.JSON);
+    const action = data.action;
+
+    const routers = {
+      signup: () => signup_(data.data),
+      verifyOTP: () => verifyOTP_(data.email, data.otp),
+      getUser: () => getUser_(data.email),
+      addLocation: () => addLocation_(data.email, data.location),
+      saveOrder: () => saveOrder_(data.data),
+      getOrders: () => getOrders_(data.email)
+    };
+
+    if (!routers[action]) return corsResponse_(error_("Invalid action"));
+
+    return corsResponse_(routers[action]());
+  } catch (err) {
+    Logger.log("doPost error: " + err);
+    return corsResponse_(error_(err.toString()));
   }
 }
 
-// For testing
-function doGet(e) {
-  return ContentService.createTextOutput('API is working');
+function doGet() {
+  return corsResponse_({ status: "Karachi Eats API Running" });
 }
 ```
 

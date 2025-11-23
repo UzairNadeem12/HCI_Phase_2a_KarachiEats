@@ -8,27 +8,30 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ArrowLeft, Trash2, Plus, Minus, User, Phone, Clock, CreditCard, Wallet, DollarSign, ShoppingBag } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { saveOrder } from '@/services/appsScript';
 
 const Checkout = () => {
   const navigate = useNavigate();
-  const { cart, updateQuantity, removeFromCart, cartTotal, clearCart, settings, isLoggedIn, userInfo } = useApp();
+  const { cart, updateQuantity, removeFromCart, cartTotal, clearCart, settings, userInfo, location } = useApp();
   const [paymentMethod, setPaymentMethod] = useState('cash');
   const [isScheduled, setIsScheduled] = useState(false);
   const [scheduledTime, setScheduledTime] = useState('');
-  const [guestName, setGuestName] = useState('');
-  const [guestPhone, setGuestPhone] = useState('');
+  const [guestName, setGuestName] = useState(userInfo?.name || '');
+  const [guestPhone, setGuestPhone] = useState(userInfo?.phone || '');
+  const [guestEmail, setGuestEmail] = useState(userInfo?.email || '');
   const [cardNumber, setCardNumber] = useState('');
   const [cardExpiry, setCardExpiry] = useState('');
   const [cardCVV, setCardCVV] = useState('');
   const [mobileWallet, setMobileWallet] = useState('');
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const isLargeText = settings.largeText;
 
   const deliveryFee = cart[0]?.deliveryFee || 60;
   const total = cartTotal + deliveryFee;
 
-  const handlePlaceOrder = () => {
-    if (!guestName || !guestPhone) {
+  const handlePlaceOrder = async () => {
+    if (!guestName || !guestPhone || !guestEmail) {
       toast.error('Please fill in your contact details');
       return;
     }
@@ -44,16 +47,50 @@ const Checkout = () => {
       toast.error('Please enter your JazzCash/Easypaisa number');
       return;
     }
-    
-    clearCart();
-    
-    if (isScheduled) {
-      toast.success(`Order scheduled for ${scheduledTime}! We'll deliver at the requested time.`);
-    } else {
-      toast.success('Order placed successfully! Your food is on the way.');
+
+    setIsProcessing(true);
+
+    try {
+      const timestamp = new Date().toISOString();
+      
+      const orderData = {
+        email: guestEmail,
+        name: guestName,
+        phone: guestPhone,
+        location: location,
+        items: cart.map(item => ({
+          id: item.id,
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price,
+        })),
+        total: total,
+        paymentMethod: paymentMethod,
+        scheduledTime: isScheduled ? scheduledTime : '',
+        timestamp: timestamp,
+      };
+
+      const result = await saveOrder(orderData);
+
+      if (result.success && result.orderId) {
+        clearCart();
+        
+        if (isScheduled) {
+          toast.success(`Order scheduled for ${scheduledTime}! We'll deliver at the requested time.`);
+        } else {
+          toast.success('Order placed successfully! Your food is on the way.');
+        }
+        
+        navigate(`/tracking/${result.orderId}`);
+      } else {
+        toast.error(result.error || 'Failed to place order');
+      }
+    } catch (error) {
+      toast.error('Failed to place order. Please try again.');
+      console.error('Order error:', error);
+    } finally {
+      setIsProcessing(false);
     }
-    
-    navigate('/tracking/12345');
   };
 
   if (cart.length === 0) {
@@ -94,6 +131,19 @@ const Checkout = () => {
             Contact Details
           </h2>
           <div className="space-y-4">
+            <div>
+              <Label htmlFor="email" className={`${isLargeText ? 'text-lg' : ''} flex items-center gap-2`}>
+                Email
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="your@email.com"
+                value={guestEmail}
+                onChange={(e) => setGuestEmail(e.target.value)}
+                className={isLargeText ? 'h-14 text-lg mt-2' : 'mt-2'}
+              />
+            </div>
             <div>
               <Label htmlFor="name" className={`${isLargeText ? 'text-lg' : ''} flex items-center gap-2`}>
                 <User className="w-4 h-4" />
@@ -315,11 +365,12 @@ const Checkout = () => {
         {/* Place Order Button */}
         <Button 
           onClick={handlePlaceOrder}
+          disabled={isProcessing}
           size={isLargeText ? "lg" : "default"}
           className={`w-full ${isLargeText ? 'h-16 text-xl' : 'h-14 text-lg'} flex items-center justify-center gap-2`}
         >
           <ShoppingBag className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'}`} />
-          Place Order - Rs. {total}
+          {isProcessing ? 'Placing Order...' : `Place Order - Rs. ${total}`}
         </Button>
       </main>
     </div>

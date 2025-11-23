@@ -1,7 +1,14 @@
-// Google Apps Script API Service
-// This service handles all communication with the Google Sheets backend
+const APPS_SCRIPT_URL = import.meta.env.VITE_APPS_SCRIPT_URL as string;
 
-const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_DEPLOYMENT_URL_HERE';
+interface ApiResponse<T = any> {
+  success: boolean;
+  data?: T;
+  error?: string;
+  orders?: Order[];
+  // Include other backend specific keys if necessary
+  orderId?: string; 
+  message?: string;
+}
 
 export interface SignupData {
   email: string;
@@ -24,129 +31,76 @@ export interface OrderData {
   total: number;
   paymentMethod: string;
   scheduledTime?: string;
-  timestamp: string;
 }
 
-export interface UserData {
+export interface Order {
+  id: string;
   email: string;
   name: string;
   phone: string;
-  locations: string[];
-  verified: boolean;
+  location: string;
+  items: Array<{
+    id: string;
+    name: string;
+    quantity: number;
+    price: number;
+  }>;
+  total: number;
+  paymentMethod: string;
+  scheduledTime?: string;
+  timestamp: string;
+  status: string;
 }
 
-// Send signup request and trigger OTP
-export const sendSignup = async (data: SignupData): Promise<{ success: boolean; error?: string }> => {
+// ----------------------------
+// JSON REQUEST FUNCTION (FIXED)
+// ----------------------------
+const callApi = async <T>(action: string, payload: any = {}): Promise<ApiResponse<T>> => {
   try {
-    const response = await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'signup',
-        data,
-      }),
+    // ⚠️ CRITICAL CHANGE: We DO NOT send 'Content-Type': 'application/json'
+    // This allows the browser to skip the OPTIONS preflight check.
+    const res = await fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      // No headers object here!
+      body: JSON.stringify({ action, ...payload })
     });
-    
-    const result = await response.json();
-    return result;
-  } catch (error) {
-    return { success: false, error: 'Failed to connect to server' };
+
+    const text = await res.text();
+
+    try {
+      return JSON.parse(text);
+    } catch {
+      console.error("Non-JSON response:", text);
+      return { success: false, error: "Server returned invalid response" };
+    }
+
+  } catch (err: any) {
+    console.error("API Fetch Error:", err);
+    return { success: false, error: err?.message || "Connection failed" };
   }
 };
 
-// Verify OTP
-export const verifyOTP = async (email: string, otp: string): Promise<{ success: boolean; error?: string }> => {
-  try {
-    const response = await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'verifyOTP',
-        email,
-        otp,
-      }),
-    });
-    
-    const result = await response.json();
-    return result;
-  } catch (error) {
-    return { success: false, error: 'Failed to verify OTP' };
-  }
-};
+// ------------------------
+// API FUNCTIONS
+// ------------------------
 
-// Get user data by email
-export const getUserData = async (email: string): Promise<{ success: boolean; data?: UserData; error?: string }> => {
-  try {
-    const response = await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'getUser',
-        email,
-      }),
-    });
-    
-    const result = await response.json();
-    return result;
-  } catch (error) {
-    return { success: false, error: 'Failed to fetch user data' };
-  }
-};
+// ✅ FIXED: Flattening data (removed { data: ... } wrapper)
+// The backend expects 'email', 'name' at the root of the JSON body.
+export const sendSignup = (data: SignupData) => 
+  callApi("signup", data); 
 
-// Save order
-export const saveOrder = async (orderData: OrderData): Promise<{ success: boolean; orderId?: string; error?: string }> => {
-  try {
-    const response = await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'saveOrder',
-        data: orderData,
-      }),
-    });
-    
-    const result = await response.json();
-    return result;
-  } catch (error) {
-    return { success: false, error: 'Failed to save order' };
-  }
-};
+export const verifyOTP = (email: string, otp: string) => 
+  callApi("verifyOTP", { email, otp });
 
-// Get order history by email
-export const getOrderHistory = async (email: string): Promise<{ success: boolean; orders?: any[]; error?: string }> => {
-  try {
-    const response = await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'getOrders',
-        email,
-      }),
-    });
-    
-    const result = await response.json();
-    return result;
-  } catch (error) {
-    return { success: false, error: 'Failed to fetch order history' };
-  }
-};
+export const getUserData = (email: string) => 
+  callApi("getUser", { email });
 
-// Add location to user profile
-export const addLocation = async (email: string, location: string): Promise<{ success: boolean; error?: string }> => {
-  try {
-    const response = await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'addLocation',
-        email,
-        location,
-      }),
-    });
-    
-    const result = await response.json();
-    return result;
-  } catch (error) {
-    return { success: false, error: 'Failed to add location' };
-  }
-};
+// ✅ FIXED: Flattening data here too
+export const saveOrder = (orderData: OrderData) => 
+  callApi("saveOrder", orderData); 
+
+export const getOrderHistory = (email: string) => 
+  callApi("getOrders", { email });
+
+export const addLocation = (email: string, location: string) => 
+  callApi("addLocation", { email, location });

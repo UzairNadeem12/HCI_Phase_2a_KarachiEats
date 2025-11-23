@@ -26,29 +26,41 @@ const VerifyOTP = () => {
 
     setLoading(true);
     try {
+      console.log('Sending OTP verification for email:', email, 'OTP:', otp);
       const result = await verifyOTP(email, otp);
+      
+      console.log('OTP verification result:', result);
       
       if (result.success) {
         // Fetch user data after successful OTP verification
+        console.log('OTP verified, fetching user data for email:', email);
         const userData = await getUserData(email);
         
-        if (userData.success && userData.data) {
+        console.log('User data response:', userData);
+        
+        // Backend returns data at root level, not in .data property
+        if (userData.success) {
+          const data = userData as any;
+          console.log('Setting user info with data:', data);
           setUserInfo({
-            email: userData.data.email,
-            name: userData.data.name,
-            phone: userData.data.phone,
-            locations: userData.data.locations,
+            email: data.email,
+            name: data.name,
+            phone: data.phone,
+            locations: data.locations,
           });
           setIsLoggedIn(true);
           toast.success('Account verified successfully!');
           navigate('/profile');
         } else {
+          console.error('User data fetch failed:', userData);
           toast.error(userData.error || 'Failed to fetch user data');
         }
       } else {
+        console.error('OTP verification failed:', result);
         toast.error(result.error || 'Invalid OTP');
       }
     } catch (error) {
+      console.error('Error during verification:', error);
       toast.error('Failed to verify OTP');
     } finally {
       setLoading(false);

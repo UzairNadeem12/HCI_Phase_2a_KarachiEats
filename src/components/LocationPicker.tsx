@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { MapPin } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
+import { toast } from 'sonner';
+import { addLocation } from '@/services/appsScript';
 
 interface LocationPickerProps {
   open: boolean;
@@ -11,8 +13,9 @@ interface LocationPickerProps {
 }
 
 const LocationPicker = ({ open, onClose }: LocationPickerProps) => {
-  const { location, setLocation, userGroup } = useApp();
+  const { location, setLocation, userGroup, userInfo } = useApp();
   const [newLocation, setNewLocation] = useState(location);
+  const [isSaving, setIsSaving] = useState(false);
 
   const isLargeText = userGroup === 'senior' || userGroup === 'disability';
 
@@ -25,10 +28,37 @@ const LocationPicker = ({ open, onClose }: LocationPickerProps) => {
     'Malir, Karachi',
   ];
 
-  const handleSave = () => {
-    if (newLocation.trim()) {
-      setLocation(newLocation);
-      onClose();
+  const handleSave = async () => {
+    if (!newLocation.trim()) {
+      toast.error('Please enter a location');
+      return;
+    }
+
+    setIsSaving(true);
+
+    try {
+      // If user is logged in, save location to backend
+      if (userInfo?.email) {
+        const result = await addLocation(userInfo.email, newLocation);
+
+        if (result.success) {
+          setLocation(newLocation);
+          toast.success('Location saved successfully!');
+          onClose();
+        } else {
+          toast.error(result.error || 'Failed to save location');
+        }
+      } else {
+        // For guests, just update local state
+        setLocation(newLocation);
+        toast.success('Location updated!');
+        onClose();
+      }
+    } catch (error) {
+      console.error('Error saving location:', error);
+      toast.error('Failed to save location');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -76,9 +106,10 @@ const LocationPicker = ({ open, onClose }: LocationPickerProps) => {
           <Button 
             onClick={handleSave} 
             className="w-full"
+            disabled={isSaving}
             size={isLargeText ? "lg" : "default"}
           >
-            Save Location
+            {isSaving ? 'Saving...' : 'Save Location'}
           </Button>
         </div>
       </DialogContent>

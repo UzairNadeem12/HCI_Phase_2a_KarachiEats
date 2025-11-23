@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '@/contexts/AppContext';
 import { Card } from '@/components/ui/card';
@@ -8,23 +8,72 @@ import { Label } from '@/components/ui/label';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { User, Mail, Phone, MapPin, Edit2, Save, LogIn, History } from 'lucide-react';
 import { toast } from 'sonner';
+import { getUserData } from '@/services/appsScript';
 
 const Profile = () => {
   const navigate = useNavigate();
-  const { settings, location, isLoggedIn, userInfo } = useApp();
+  const { settings, location, isLoggedIn, userInfo, setUserInfo } = useApp();
   const [isEditing, setIsEditing] = useState(false);
-  const [guestData, setGuestData] = useState({
+  const [isLoading, setIsLoading] = useState(true);
+  const [userData, setUserData] = useState({
     name: 'Guest User',
     email: 'guest@karachieats.com',
     phone: '0300-1234567',
+    locations: [],
   });
 
   const isLargeText = settings.largeText;
 
+  useEffect(() => {
+    const fetchUserData = async () => {
+      setIsLoading(true);
+      try {
+        if (userInfo?.email) {
+          const result = await getUserData(userInfo.email);
+
+          if (result.success) {
+            // Backend returns data at root level, not in .data property
+            const data = result as any;
+            setUserData({
+              name: data.name,
+              email: data.email,
+              phone: data.phone,
+              locations: data.locations || [],
+            });
+          } else {
+            toast.error(result.error || 'Failed to fetch user data');
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        toast.error('Failed to fetch user data');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, [userInfo?.email]);
+
   const handleSave = () => {
     setIsEditing(false);
+    if (userInfo) {
+      setUserInfo({
+        ...userInfo,
+        name: userData.name,
+        phone: userData.phone,
+      });
+    }
     toast.success('Profile updated successfully!');
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <p className="text-muted-foreground">Loading profile...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -42,29 +91,33 @@ const Profile = () => {
               </AvatarFallback>
             </Avatar>
             <h2 className={`font-bold ${isLargeText ? 'text-3xl' : 'text-2xl'} mb-2`}>
-              {guestData.name}
+              {userData.name}
             </h2>
-            <p className={`text-muted-foreground ${isLargeText ? 'text-lg' : ''}`}>Guest Account</p>
+            <p className={`text-muted-foreground ${isLargeText ? 'text-lg' : ''}`}>
+              {isLoggedIn ? 'Registered Account' : 'Guest Account'}
+            </p>
           </div>
 
-          <Button
-            variant="outline"
-            className="w-full"
-            size={isLargeText ? 'lg' : 'default'}
-            onClick={() => setIsEditing(!isEditing)}
-          >
-            {isEditing ? (
-              <>
-                <Save className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />
-                Save Changes
-              </>
-            ) : (
-              <>
-                <Edit2 className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />
-                Edit Profile
-              </>
-            )}
-          </Button>
+          {isLoggedIn && (
+            <Button
+              variant="outline"
+              className="w-full"
+              size={isLargeText ? 'lg' : 'default'}
+              onClick={() => setIsEditing(!isEditing)}
+            >
+              {isEditing ? (
+                <>
+                  <Save className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />
+                  Save Changes
+                </>
+              ) : (
+                <>
+                  <Edit2 className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />
+                  Edit Profile
+                </>
+              )}
+            </Button>
+          )}
         </Card>
 
         {/* Profile Information */}
@@ -74,40 +127,30 @@ const Profile = () => {
           </h3>
           <div className="space-y-4">
             <div>
-              <Label htmlFor="name" className={`flex items-center gap-2 mb-2 ${isLargeText ? 'text-lg' : ''}`}>
-                <User className="w-4 h-4" />
-                Name
-              </Label>
-              {isEditing ? (
-                <Input
-                  id="name"
-                  value={guestData.name}
-                  onChange={(e) => setGuestData({ ...guestData, name: e.target.value })}
-                  className={isLargeText ? 'h-14 text-lg' : 'h-12'}
-                />
-              ) : (
-                <p className={`text-muted-foreground ${isLargeText ? 'text-lg' : ''} pl-6`}>
-                  {guestData.name}
-                </p>
-              )}
-            </div>
-
-            <div>
               <Label htmlFor="email" className={`flex items-center gap-2 mb-2 ${isLargeText ? 'text-lg' : ''}`}>
                 <Mail className="w-4 h-4" />
                 Email
               </Label>
-              {isEditing ? (
+              <p className={`text-muted-foreground ${isLargeText ? 'text-lg' : ''} pl-6`}>
+                {userData.email}
+              </p>
+            </div>
+
+            <div>
+              <Label htmlFor="name" className={`flex items-center gap-2 mb-2 ${isLargeText ? 'text-lg' : ''}`}>
+                <User className="w-4 h-4" />
+                Name
+              </Label>
+              {isEditing && isLoggedIn ? (
                 <Input
-                  id="email"
-                  type="email"
-                  value={guestData.email}
-                  onChange={(e) => setGuestData({ ...guestData, email: e.target.value })}
+                  id="name"
+                  value={userData.name}
+                  onChange={(e) => setUserData({ ...userData, name: e.target.value })}
                   className={isLargeText ? 'h-14 text-lg' : 'h-12'}
                 />
               ) : (
                 <p className={`text-muted-foreground ${isLargeText ? 'text-lg' : ''} pl-6`}>
-                  {guestData.email}
+                  {userData.name}
                 </p>
               )}
             </div>
@@ -117,16 +160,16 @@ const Profile = () => {
                 <Phone className="w-4 h-4" />
                 Phone
               </Label>
-              {isEditing ? (
+              {isEditing && isLoggedIn ? (
                 <Input
                   id="phone"
-                  value={guestData.phone}
-                  onChange={(e) => setGuestData({ ...guestData, phone: e.target.value })}
+                  value={userData.phone}
+                  onChange={(e) => setUserData({ ...userData, phone: e.target.value })}
                   className={isLargeText ? 'h-14 text-lg' : 'h-12'}
                 />
               ) : (
                 <p className={`text-muted-foreground ${isLargeText ? 'text-lg' : ''} pl-6`}>
-                  {guestData.phone}
+                  {userData.phone}
                 </p>
               )}
             </div>
@@ -138,9 +181,25 @@ const Profile = () => {
               </Label>
               <p className={`text-muted-foreground ${isLargeText ? 'text-lg' : ''} pl-6`}>{location}</p>
             </div>
+
+            {userData.locations && userData.locations.length > 0 && (
+              <div>
+                <Label className={`flex items-center gap-2 mb-2 ${isLargeText ? 'text-lg' : ''}`}>
+                  <MapPin className="w-4 h-4" />
+                  Saved Locations
+                </Label>
+                <div className="pl-6 space-y-1">
+                  {userData.locations.map((loc, idx) => (
+                    <p key={idx} className={`text-muted-foreground ${isLargeText ? 'text-base' : 'text-sm'}`}>
+                      • {loc}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
-          {isEditing && (
+          {isEditing && isLoggedIn && (
             <Button onClick={handleSave} className="w-full mt-6" size={isLargeText ? 'lg' : 'default'}>
               Save Changes
             </Button>
@@ -153,15 +212,17 @@ const Profile = () => {
             Account
           </h3>
           <div className="space-y-3">
-            <Button
-              variant="outline"
-              className="w-full justify-start flex items-center gap-2"
-              size={isLargeText ? 'lg' : 'default'}
-              onClick={() => navigate('/auth')}
-            >
-              <LogIn className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'}`} />
-              Login / Sign Up
-            </Button>
+            {!isLoggedIn && (
+              <Button
+                variant="outline"
+                className="w-full justify-start flex items-center gap-2"
+                size={isLargeText ? 'lg' : 'default'}
+                onClick={() => navigate('/auth')}
+              >
+                <LogIn className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'}`} />
+                Login / Sign Up
+              </Button>
+            )}
             <Button
               variant="outline"
               className="w-full justify-start flex items-center gap-2"

@@ -9,10 +9,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LogIn, UserPlus, Mail, Lock, UserCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { sendSignup } from '@/services/appsScript';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const Auth = () => {
   const navigate = useNavigate();
   const { settings } = useApp();
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   
   const [loginData, setLoginData] = useState({ email: '', password: '' });
@@ -24,7 +26,7 @@ const Auth = () => {
     e.preventDefault();
     
     if (!loginData.email || !loginData.password) {
-      toast.error('Please fill in all fields');
+      toast.error(t('pleaseFillFields'));
       return;
     }
 
@@ -33,10 +35,10 @@ const Auth = () => {
     // Login flow - currently limited by backend, storing credentials in localStorage for demo
     try {
       localStorage.setItem('userEmail', loginData.email);
-      toast.success('Login successful!');
+      toast.success(t('loginSuccess'));
       navigate('/home');
     } catch (error) {
-      toast.error('Login failed');
+      toast.error(t('pleaseFillFields'));
     } finally {
       setIsLoading(false);
     }
@@ -46,17 +48,17 @@ const Auth = () => {
     e.preventDefault();
     
     if (!signupData.name || !signupData.email || !signupData.phone || !signupData.location) {
-      toast.error('Please fill in all required fields');
+      toast.error(t('pleaseFillFields'));
       return;
     }
 
     if (signupData.password !== signupData.confirmPassword) {
-      toast.error('Passwords do not match');
+      toast.error(t('pleaseFillFields'));
       return;
     }
 
     if (signupData.password.length < 6) {
-      toast.error('Password must be at least 6 characters');
+      toast.error(t('pleaseFillFields'));
       return;
     }
 
@@ -71,13 +73,13 @@ const Auth = () => {
       });
 
       if (result.success) {
-        toast.success('Account created! Check your email for OTP.');
+        toast.success(t('signupSuccess'));
         navigate('/verify-otp', { state: { email: signupData.email } });
       } else {
-        toast.error(result.error || 'Signup failed');
+        toast.error(result.error || t('pleaseFillFields'));
       }
     } catch (error) {
-      toast.error('Signup failed');
+      toast.error(t('pleaseFillFields'));
     } finally {
       setIsLoading(false);
     }
@@ -88,20 +90,20 @@ const Auth = () => {
       <Card className="w-full max-w-md p-6">
         <div className="text-center mb-6">
           <h1 className={`font-bold ${isLargeText ? 'text-4xl' : 'text-3xl'} mb-2`}>
-            KarachiEats
+            {t('appName')}
           </h1>
           <p className={`text-muted-foreground ${isLargeText ? 'text-lg' : ''}`}>
-            Welcome! Please login or sign up
+            {t('welcomeBack')}
           </p>
         </div>
 
         <Tabs defaultValue="login" className="w-full">
           <TabsList className="grid w-full grid-cols-2 mb-6">
             <TabsTrigger value="login" className={isLargeText ? 'text-lg' : ''}>
-              Login
+              {t('signIn')}
             </TabsTrigger>
             <TabsTrigger value="signup" className={isLargeText ? 'text-lg' : ''}>
-              Sign Up
+              {t('signUp')}
             </TabsTrigger>
           </TabsList>
 
@@ -111,7 +113,7 @@ const Auth = () => {
               <div>
                 <Label htmlFor="login-email" className={`${isLargeText ? 'text-lg' : ''} flex items-center gap-2`}>
                   <Mail className="w-4 h-4" />
-                  Email
+                  {t('email')}
                 </Label>
                 <Input
                   id="login-email"
@@ -126,7 +128,7 @@ const Auth = () => {
               <div>
                 <Label htmlFor="login-password" className={`${isLargeText ? 'text-lg' : ''} flex items-center gap-2`}>
                   <Lock className="w-4 h-4" />
-                  Password
+                  {t('password')}
                 </Label>
                 <Input
                   id="login-password"
@@ -145,7 +147,7 @@ const Auth = () => {
                 disabled={isLoading}
               >
                 <LogIn className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />
-                {isLoading ? 'Logging in...' : 'Login'}
+                {isLoading ? t('loading') : t('signIn')}
               </Button>
             </form>
           </TabsContent>
@@ -156,7 +158,7 @@ const Auth = () => {
               <div>
                 <Label htmlFor="signup-name" className={`${isLargeText ? 'text-lg' : ''} flex items-center gap-2`}>
                   <UserCircle className="w-4 h-4" />
-                  Full Name
+                  {t('name')}
                 </Label>
                 <Input
                   id="signup-name"
@@ -171,7 +173,7 @@ const Auth = () => {
               <div>
                 <Label htmlFor="signup-email" className={`${isLargeText ? 'text-lg' : ''} flex items-center gap-2`}>
                   <Mail className="w-4 h-4" />
-                  Email
+                  {t('email')}
                 </Label>
                 <Input
                   id="signup-email"
@@ -214,7 +216,7 @@ const Auth = () => {
               <div>
                 <Label htmlFor="signup-password" className={`${isLargeText ? 'text-lg' : ''} flex items-center gap-2`}>
                   <Lock className="w-4 h-4" />
-                  Password
+                  {t('password')}
                 </Label>
                 <Input
                   id="signup-password"
@@ -248,7 +250,7 @@ const Auth = () => {
                 disabled={isLoading}
               >
                 <UserPlus className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />
-                {isLoading ? 'Creating account...' : 'Sign Up'}
+                {isLoading ? t('loading') : t('signUp')}
               </Button>
             </form>
           </TabsContent>

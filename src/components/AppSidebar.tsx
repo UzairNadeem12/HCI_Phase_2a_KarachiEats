@@ -1,6 +1,7 @@
 import { User, History, LogIn, Home, Settings as SettingsIcon } from 'lucide-react';
 import { NavLink } from '@/components/NavLink';
 import { useApp } from '@/contexts/AppContext';
+import { useTranslation } from '@/hooks/useTranslation';
 import {
   Sidebar,
   SidebarContent,
@@ -13,26 +14,27 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 
-const menuItems = [
-  { title: 'Home', url: '/home', icon: Home },
-  { title: 'Order History', url: '/order-history', icon: History },
-  { title: 'Profile', url: '/profile', icon: User },
-  { title: 'Settings', url: '/settings', icon: SettingsIcon },
-  { title: 'Login', url: '/auth', icon: LogIn },
-];
-
 export function AppSidebar() {
   const { state } = useSidebar();
   const { settings } = useApp();
+  const { t } = useTranslation();
   const collapsed = state === 'collapsed';
   const isLargeText = settings.largeText;
+
+  const menuItems = [
+    { title: t('home'), url: '/home', icon: Home },
+    { title: t('orders'), url: '/order-history', icon: History },
+    { title: t('profileMenu'), url: '/profile', icon: User },
+    { title: t('settingsMenu'), url: '/settings', icon: SettingsIcon },
+    { title: t('login'), url: '/auth', icon: LogIn },
+  ];
 
   return (
     <Sidebar className={`${collapsed ? 'w-14' : 'w-60'} bg-card border-r border-border`} collapsible="icon">
       <SidebarContent className="bg-card">
         <SidebarGroup>
           <SidebarGroupLabel className={isLargeText ? 'text-lg' : ''}>
-            {!collapsed && 'Menu'}
+            {!collapsed && t('menuLabel')}
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>

@@ -7,10 +7,12 @@ import { Badge } from '@/components/ui/badge';
 import { Clock, Package, RotateCcw, FileText } from 'lucide-react';
 import { toast } from 'sonner';
 import { getOrderHistory, Order } from '@/services/appsScript';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const OrderHistory = () => {
   const navigate = useNavigate();
   const { settings, userInfo } = useApp();
+  const { t } = useTranslation();
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 

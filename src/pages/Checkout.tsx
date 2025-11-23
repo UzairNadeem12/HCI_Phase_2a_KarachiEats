@@ -349,7 +349,15 @@ const Checkout = () => {
                     id="cardExpiry"
                     placeholder="MM/YY"
                     value={cardExpiry}
-                    onChange={(e) => setCardExpiry(e.target.value)}
+                    onChange={(e) => {
+                      let value = e.target.value.replace(/\D/g, ""); 
+
+                      if (value.length > 2) {
+                        value = value.slice(0, 2) + "/" + value.slice(2, 4);
+                      }
+
+                      setCardExpiry(value);
+                    }}
                     className={isLargeText ? 'h-14 text-lg mt-2' : 'mt-2'}
                     maxLength={5}
                   />

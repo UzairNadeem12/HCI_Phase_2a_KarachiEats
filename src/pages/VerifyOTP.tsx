@@ -22,7 +22,7 @@ const VerifyOTP = () => {
 
   const handleVerify = async () => {
     if (!otp || otp.length !== 6) {
-      toast.error('Please enter a valid 6-digit OTP');
+      toast.error(t('pleaseEnterOTP'));
       return;
     }
 
@@ -51,19 +51,19 @@ const VerifyOTP = () => {
             locations: data.locations,
           });
           setIsLoggedIn(true);
-          toast.success('Account verified successfully!');
+          toast.success(t('otpVerified'));
           navigate('/profile');
         } else {
           console.error('User data fetch failed:', userData);
-          toast.error(userData.error || 'Failed to fetch user data');
+          toast.error(userData.error || t('otpVerified'));
         }
       } else {
         console.error('OTP verification failed:', result);
-        toast.error(result.error || 'Invalid OTP');
+        toast.error(result.error || t('pleaseEnterOTP'));
       }
     } catch (error) {
       console.error('Error during verification:', error);
-      toast.error('Failed to verify OTP');
+      toast.error(t('pleaseEnterOTP'));
     } finally {
       setLoading(false);
     }
@@ -77,7 +77,7 @@ const VerifyOTP = () => {
         <div className="container mx-auto px-4 py-4">
           <Button variant="ghost" onClick={() => navigate(-1)} size={isLargeText ? "lg" : "default"}>
             <ArrowLeft className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />
-            Back
+            {t('back')}
           </Button>
         </div>
       </header>
@@ -89,10 +89,10 @@ const VerifyOTP = () => {
               <Shield className="w-8 h-8 text-primary" />
             </div>
             <h1 className={`font-bold ${isLargeText ? 'text-3xl' : 'text-2xl'} mb-2`}>
-              Verify Your Account
+              {t('verifyOTP')}
             </h1>
             <p className={`text-muted-foreground ${isLargeText ? 'text-lg' : ''}`}>
-              Enter the 6-digit OTP sent to
+              {t('otpSentTo')}
             </p>
             <p className={`font-medium ${isLargeText ? 'text-lg' : ''}`}>{email}</p>
           </div>
@@ -100,7 +100,7 @@ const VerifyOTP = () => {
           <div className="space-y-4">
             <div>
               <Label htmlFor="otp" className={isLargeText ? 'text-lg' : ''}>
-                OTP Code
+                {t('enterOTP')}
               </Label>
               <Input
                 id="otp"
@@ -119,7 +119,7 @@ const VerifyOTP = () => {
               size={isLargeText ? "lg" : "default"}
               className="w-full"
             >
-              {loading ? 'Verifying...' : 'Verify OTP'}
+              {loading ? t('verifying') : t('verifyAndContinue')}
             </Button>
 
             <Button
@@ -128,7 +128,7 @@ const VerifyOTP = () => {
               size={isLargeText ? "lg" : "default"}
               className="w-full"
             >
-              Back to Login
+              {t('backToLogin')}
             </Button>
           </div>
         </Card>

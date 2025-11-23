@@ -167,7 +167,7 @@ const OrderHistory = () => {
                     onClick={() => navigate('/home')}
                   >
                     <RotateCcw className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'}`} />
-                    Reorder
+                    {t('orderAgain')}
                   </Button>
                   <Button
                     variant="outline"
@@ -176,7 +176,7 @@ const OrderHistory = () => {
                     onClick={() => navigate(`/tracking/${order.id}`)}
                   >
                     <FileText className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'}`} />
-                    View Details
+                    {t('viewDetails')}
                   </Button>
                 </div>
               </Card>

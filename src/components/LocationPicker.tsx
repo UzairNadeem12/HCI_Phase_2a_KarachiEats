@@ -6,6 +6,7 @@ import { MapPin } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 import { toast } from 'sonner';
 import { addLocation } from '@/services/appsScript';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface LocationPickerProps {
   open: boolean;
@@ -13,11 +14,12 @@ interface LocationPickerProps {
 }
 
 const LocationPicker = ({ open, onClose }: LocationPickerProps) => {
-  const { location, setLocation, userGroup, userInfo } = useApp();
+  const { location, setLocation, settings, userInfo } = useApp();
+  const { t } = useTranslation();
   const [newLocation, setNewLocation] = useState(location);
   const [isSaving, setIsSaving] = useState(false);
 
-  const isLargeText = userGroup === 'senior' || userGroup === 'disability';
+  const isLargeText = settings.largeText;
 
   const popularLocations = [
     'Gulshan-e-Iqbal, Karachi',
@@ -30,7 +32,7 @@ const LocationPicker = ({ open, onClose }: LocationPickerProps) => {
 
   const handleSave = async () => {
     if (!newLocation.trim()) {
-      toast.error('Please enter a location');
+      toast.error(t('pleaseEnterLocation'));
       return;
     }
 
@@ -43,20 +45,20 @@ const LocationPicker = ({ open, onClose }: LocationPickerProps) => {
 
         if (result.success) {
           setLocation(newLocation);
-          toast.success('Location saved successfully!');
+          toast.success(t('locationSavedSuccessfully'));
           onClose();
         } else {
-          toast.error(result.error || 'Failed to save location');
+          toast.error(result.error || t('failedToSaveLocation'));
         }
       } else {
         // For guests, just update local state
         setLocation(newLocation);
-        toast.success('Location updated!');
+        toast.success(t('locationUpdated'));
         onClose();
       }
     } catch (error) {
       console.error('Error saving location:', error);
-      toast.error('Failed to save location');
+      toast.error(t('failedToSaveLocation'));
     } finally {
       setIsSaving(false);
     }
@@ -67,7 +69,7 @@ const LocationPicker = ({ open, onClose }: LocationPickerProps) => {
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle className={isLargeText ? 'text-2xl' : 'text-xl'}>
-            Change Location
+            {t('changeLocation')}
           </DialogTitle>
         </DialogHeader>
         
@@ -76,7 +78,7 @@ const LocationPicker = ({ open, onClose }: LocationPickerProps) => {
             <div className="relative flex-1">
               <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               <Input
-                placeholder="Enter your location"
+                placeholder={t('enterYourLocation')}
                 value={newLocation}
                 onChange={(e) => setNewLocation(e.target.value)}
                 className={`pl-10 ${isLargeText ? 'h-14 text-lg' : 'h-12'}`}
@@ -86,7 +88,7 @@ const LocationPicker = ({ open, onClose }: LocationPickerProps) => {
 
           <div className="space-y-2">
             <p className={`font-medium ${isLargeText ? 'text-lg' : 'text-sm'} text-muted-foreground`}>
-              Popular Locations
+              {t('popularLocations')}
             </p>
             <div className="space-y-2">
               {popularLocations.map((loc) => (
@@ -109,7 +111,7 @@ const LocationPicker = ({ open, onClose }: LocationPickerProps) => {
             disabled={isSaving}
             size={isLargeText ? "lg" : "default"}
           >
-            {isSaving ? 'Saving...' : 'Save Location'}
+            {isSaving ? t('saving') : t('saveLocation')}
           </Button>
         </div>
       </DialogContent>

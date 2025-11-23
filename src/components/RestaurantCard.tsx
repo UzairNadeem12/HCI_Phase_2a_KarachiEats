@@ -3,6 +3,7 @@ import { useApp } from '@/contexts/AppContext';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Clock, Star, Bike } from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface Restaurant {
   id: string;
@@ -21,9 +22,10 @@ interface RestaurantCardProps {
 
 const RestaurantCard = ({ restaurant }: RestaurantCardProps) => {
   const navigate = useNavigate();
-  const { userGroup } = useApp();
+  const { settings } = useApp();
+  const { t } = useTranslation();
   
-  const isLargeText = userGroup === 'senior' || userGroup === 'disability';
+  const isLargeText = settings.largeText;
 
   const handleClick = () => {
     if (restaurant.isOpen) {
@@ -47,13 +49,13 @@ const RestaurantCard = ({ restaurant }: RestaurantCardProps) => {
         {!restaurant.isOpen && (
           <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
             <Badge variant="secondary" className={`${isLargeText ? 'text-2xl px-6 py-3' : 'text-lg px-4 py-2'} bg-badge-closed text-white`}>
-              CLOSED
+              {t('closed')}
             </Badge>
           </div>
         )}
         {restaurant.isOpen && (
             <Badge className={`absolute top-3 left-3 ${isLargeText ? 'text-base px-3 py-1' : 'text-sm'} bg-success`}>
-              OPEN
+              {t('open')}
             </Badge>
         )}
       </div>

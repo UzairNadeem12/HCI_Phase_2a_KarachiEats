@@ -7,6 +7,7 @@ import RestaurantCard from '@/components/RestaurantCard';
 import CartButton from '@/components/CartButton';
 import LocationPicker from '@/components/LocationPicker';
 import FiltersSheet, { FilterState } from '@/components/FiltersSheet';
+import { useTranslation } from '@/hooks/useTranslation';
 
 // Dummy restaurant data
 const restaurants = [
@@ -74,6 +75,7 @@ const restaurants = [
 
 const Home = () => {
   const { location, settings } = useApp();
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [showLocationPicker, setShowLocationPicker] = useState(false);
   const [filters, setFilters] = useState<FilterState>({
@@ -120,7 +122,7 @@ const Home = () => {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               <Input
                 type="text"
-                placeholder="Search restaurants or cuisines..."
+                placeholder={t('searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className={`pl-10 ${isLargeText ? 'h-14 text-lg' : 'h-12'}`}
@@ -135,10 +137,10 @@ const Home = () => {
       <main className="container mx-auto px-4 py-6">
         <div className="mb-6">
           <h2 className={`font-bold ${isLargeText ? 'text-3xl' : 'text-2xl'} mb-2`}>
-            Restaurants Near You
+            {t('restaurantsNearYou')}
           </h2>
           <p className={`text-muted-foreground ${isLargeText ? 'text-lg' : 'text-sm'}`}>
-            {restaurants.filter(r => r.isOpen).length} restaurants delivering now
+            {restaurants.filter(r => r.isOpen).length} {t('restaurantsDelivering')}
           </p>
         </div>
 
@@ -151,7 +153,7 @@ const Home = () => {
           ) : (
             <div className="col-span-full text-center py-12">
               <p className={`text-muted-foreground ${isLargeText ? 'text-lg' : ''}`}>
-                No restaurants found
+                {t('noRestaurantsFound')}
               </p>
             </div>
           )}

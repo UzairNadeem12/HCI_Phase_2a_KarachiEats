@@ -1,11 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import { useApp } from '@/contexts/AppContext';
 import { Button } from '@/components/ui/button';
-import { GraduationCap, Users, Eye, Accessibility } from 'lucide-react';
-
+import { useTranslation } from '@/hooks/useTranslation';
 
 const Onboarding = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleContinue = () => {
     navigate('/home');
@@ -16,21 +15,21 @@ const Onboarding = () => {
       <div className="w-full max-w-4xl space-y-8 animate-fade-in">
         <div className="text-center space-y-3">
           <h1 className="text-4xl md:text-5xl font-bold text-foreground">
-            Welcome to <span className="text-primary">KarachiEats</span>
+            {t('welcomeTo')} <span className="text-primary">{t('appName')}</span>
           </h1>
 
           <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-          Enjoy fast food delivery, personalized restaurant recommendations, and smooth ordering experience.
-        </p>
+            {t('onboardingDescription')}
+          </p>
 
-        <div className="pt-6">
-          <Button
-            onClick={handleContinue}
-            className="px-10 py-6 text-lg font-semibold"
-          >
-            Continue
-          </Button>
-        </div>
+          <div className="pt-6">
+            <Button
+              onClick={handleContinue}
+              className="px-10 py-6 text-lg font-semibold"
+            >
+              {t('continue')}
+            </Button>
+          </div>
 
         </div>
       </div>

@@ -7,6 +7,7 @@ import { ArrowLeft, Star, Clock, Bike, Plus, Minus } from 'lucide-react';
 import { useState } from 'react';
 import CartButton from '@/components/CartButton';
 import { toast } from 'sonner';
+import { useTranslation } from '@/hooks/useTranslation';
 
 import raitaImg from '@/assets/raita.jpg';
 import naanImg from '@/assets/naan.jpg';
@@ -47,6 +48,7 @@ const RestaurantDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart, cart, settings } = useApp();
+  const { t } = useTranslation();
   const [quantities, setQuantities] = useState<Record<string, number>>({});
 
   const restaurant = restaurantData[id || '1'];

@@ -6,14 +6,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { User, Mail, Phone, MapPin, Edit2, Save, LogIn, History } from 'lucide-react';
+import { User, Mail, Phone, MapPin, Edit2, Save, LogIn, History, LogOut } from 'lucide-react';
 import { toast } from 'sonner';
 import { getUserData, updateProfile } from '@/services/appsScript';
 import { useTranslation } from '@/hooks/useTranslation';
 
 const Profile = () => {
   const navigate = useNavigate();
-  const { settings, location, isLoggedIn, userInfo, setUserInfo } = useApp();
+  const { settings, location, isLoggedIn, userInfo, setUserInfo, setIsLoggedIn } = useApp();
   const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -87,6 +87,12 @@ const Profile = () => {
     }
   };
 
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setUserInfo(null);
+    toast.success(t('loggedOutSuccess'));
+    navigate('/auth');
+  };
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -252,6 +258,17 @@ const Profile = () => {
               <History className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'}`} />
               {t('viewOrderHistory')}
             </Button>
+            {isLoggedIn && (
+              <Button
+                variant="destructive"
+                className="w-full justify-start flex items-center gap-2"
+                size={isLargeText ? 'lg' : 'default'}
+                onClick={handleLogout}
+              >
+                <LogOut className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'}`} />
+                {t('logout')}
+              </Button>
+            )}
           </div>
         </Card>
       </main>

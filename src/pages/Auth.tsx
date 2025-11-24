@@ -17,15 +17,15 @@ const Auth = () => {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   
-  const [loginData, setLoginData] = useState({ email: '', password: '' });
-  const [signupData, setSignupData] = useState({ name: '', email: '', phone: '', location: '', password: '', confirmPassword: '' });
+  const [loginData, setLoginData] = useState({ email: '' });
+  const [signupData, setSignupData] = useState({ name: '', email: '', phone: '', location: '' });
 
   const isLargeText = settings.largeText;
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!loginData.email || !loginData.password) {
+    if (!loginData.email) {
       toast.error(t('pleaseFillFields'));
       return;
     }
@@ -33,14 +33,12 @@ const Auth = () => {
     setIsLoading(true);
     
     try {
-      // Fetch user data from backend
       console.log('Attempting login for email:', loginData.email);
       const result = await getUserData(loginData.email);
       
       console.log('Login result:', result);
       
       if (result.success) {
-        // User exists in backend, set their info
         const data = result as any;
         console.log('User found, setting info:', data);
         
@@ -52,7 +50,7 @@ const Auth = () => {
         });
         setIsLoggedIn(true);
         
-        toast.success('Login successful!');
+        toast.success(t('loginSuccess'));
         navigate('/profile');
       } else {
         toast.error(result.error || 'User not found. Please sign up first.');
@@ -69,16 +67,6 @@ const Auth = () => {
     e.preventDefault();
     
     if (!signupData.name || !signupData.email || !signupData.phone || !signupData.location) {
-      toast.error(t('pleaseFillFields'));
-      return;
-    }
-
-    if (signupData.password !== signupData.confirmPassword) {
-      toast.error(t('pleaseFillFields'));
-      return;
-    }
-
-    if (signupData.password.length < 6) {
       toast.error(t('pleaseFillFields'));
       return;
     }
@@ -142,21 +130,6 @@ const Auth = () => {
                   placeholder="your@email.com"
                   value={loginData.email}
                   onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
-                  className={isLargeText ? 'h-14 text-lg mt-2' : 'mt-2'}
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="login-password" className={`${isLargeText ? 'text-lg' : ''} flex items-center gap-2`}>
-                  <Lock className="w-4 h-4" />
-                  {t('password')}
-                </Label>
-                <Input
-                  id="login-password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={loginData.password}
-                  onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
                   className={isLargeText ? 'h-14 text-lg mt-2' : 'mt-2'}
                   required
                 />
@@ -230,36 +203,6 @@ const Auth = () => {
                   placeholder="Your address"
                   value={signupData.location}
                   onChange={(e) => setSignupData({ ...signupData, location: e.target.value })}
-                  className={isLargeText ? 'h-14 text-lg mt-2' : 'mt-2'}
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="signup-password" className={`${isLargeText ? 'text-lg' : ''} flex items-center gap-2`}>
-                  <Lock className="w-4 h-4" />
-                  {t('password')}
-                </Label>
-                <Input
-                  id="signup-password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={signupData.password}
-                  onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
-                  className={isLargeText ? 'h-14 text-lg mt-2' : 'mt-2'}
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="signup-confirm" className={`${isLargeText ? 'text-lg' : ''} flex items-center gap-2`}>
-                  <Lock className="w-4 h-4" />
-                  Confirm Password
-                </Label>
-                <Input
-                  id="signup-confirm"
-                  type="password"
-                  placeholder="••••••••"
-                  value={signupData.confirmPassword}
-                  onChange={(e) => setSignupData({ ...signupData, confirmPassword: e.target.value })}
                   className={isLargeText ? 'h-14 text-lg mt-2' : 'mt-2'}
                   required
                 />

@@ -1,6 +1,8 @@
 import { User, History, LogIn, Home, Settings as SettingsIcon } from 'lucide-react';
+import { useEffect } from 'react';
 import { NavLink } from '@/components/NavLink';
 import { useApp } from '@/contexts/AppContext';
+import { useVoice } from '@/contexts/VoiceContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import {
   Sidebar,
@@ -17,9 +19,17 @@ import {
 export function AppSidebar() {
   const { state } = useSidebar();
   const { settings, isLoggedIn } = useApp();
+  const { speak } = useVoice();
   const { t } = useTranslation();
   const collapsed = state === 'collapsed';
   const isLargeText = settings.largeText;
+
+  // Announce when sidebar opens
+  useEffect(() => {
+    if (state === 'expanded') {
+      speak('You are in the sidebar menu');
+    }
+  }, [state, speak]);
 
   const menuItems = [
     { title: t('home'), url: '/home', icon: Home },

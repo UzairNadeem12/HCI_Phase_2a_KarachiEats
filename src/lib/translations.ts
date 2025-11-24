@@ -184,6 +184,10 @@ export const translations = {
     languageSetUrdu: 'Language set to Urdu',
     largeTextEnabled: 'Large text enabled',
     largeTextDisabled: 'Large text disabled',
+    voiceFeedback: 'Voice Feedback',
+    voiceFeedbackDescription: 'Enable text-to-speech announcements for app interactions',
+    voiceFeedbackEnabled: 'Voice feedback enabled',
+    voiceFeedbackDisabled: 'Voice feedback disabled',
     
     // Not Found
     notFound: '404',
@@ -396,6 +400,10 @@ export const translations = {
     languageSetUrdu: 'زبان اردو میں سیٹ ہو گئی',
     largeTextEnabled: 'بڑا متن فعال ہو گیا',
     largeTextDisabled: 'بڑا متن غیر فعال ہو گیا',
+    voiceFeedback: 'آواز کی رائے',
+    voiceFeedbackDescription: 'ایپ کے تعاملات کے لیے ٹیکسٹ سے تقریر کے اعلانات فعال کریں',
+    voiceFeedbackEnabled: 'آواز کی رائے فعال ہو گئی',
+    voiceFeedbackDisabled: 'آواز کی رائے غیر فعال ہو گئی',
     
     // Not Found
     notFound: '404',

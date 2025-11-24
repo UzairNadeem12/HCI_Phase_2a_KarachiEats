@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useApp } from '@/contexts/AppContext';
+import { useVoice } from '@/contexts/VoiceContext';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Phone, MessageSquare, MapPin, CheckCircle2 } from 'lucide-react';
@@ -11,8 +12,10 @@ const OrderTracking = () => {
   const navigate = useNavigate();
   const { orderId } = useParams();
   const { settings, userInfo } = useApp();
+  const { speak } = useVoice();
   const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState(0);
+  const [announcedSteps, setAnnouncedSteps] = useState<Set<number>>(new Set());
 
   const isLargeText = settings.largeText;
 
@@ -22,6 +25,14 @@ const OrderTracking = () => {
     { label: 'Out for Delivery', icon: '🚴', status: 'out-for-delivery' },
     { label: 'Delivered', icon: '✅', status: 'delivered' },
   ];
+
+  useEffect(() => {
+    // Announce when step changes and hasn't been announced yet
+    if (!announcedSteps.has(currentStep)) {
+      speak(`Your order status is ${allSteps[currentStep].label.toLowerCase()}`);
+      setAnnouncedSteps(prev => new Set([...prev, currentStep]));
+    }
+  }, [currentStep, announcedSteps, speak]);
 
   useEffect(() => {
     const interval = setInterval(async () => {

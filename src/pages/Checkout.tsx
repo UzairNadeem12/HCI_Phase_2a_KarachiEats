@@ -1,18 +1,20 @@
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '@/contexts/AppContext';
+import { useVoice } from '@/contexts/VoiceContext';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ArrowLeft, Trash2, Plus, Minus, User, Phone, Clock, CreditCard, Wallet, DollarSign, ShoppingBag } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import { saveOrder } from '@/services/appsScript';
 
 const Checkout = () => {
   const navigate = useNavigate();
   const { cart, updateQuantity, removeFromCart, cartTotal, clearCart, settings, userInfo, location } = useApp();
+  const { speak } = useVoice();
   const [paymentMethod, setPaymentMethod] = useState('cash');
   const [isScheduled, setIsScheduled] = useState(false);
   const [scheduledTime, setScheduledTime] = useState('');
@@ -24,11 +26,46 @@ const Checkout = () => {
   const [cardCVV, setCardCVV] = useState('');
   const [mobileWallet, setMobileWallet] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
+  const hasAnnouncedWelcome = useRef(false);
 
   const isLargeText = settings.largeText;
 
   const deliveryFee = cart[0]?.deliveryFee || 60;
   const total = cartTotal + deliveryFee;
+
+  // Announce checkout page on load (only once)
+  useEffect(() => {
+    if (!hasAnnouncedWelcome.current) {
+      speak('Welcome to checkout. Please fill in your contact details and select a payment method');
+      hasAnnouncedWelcome.current = true;
+    }
+  }, [speak]);
+
+  /**
+   * Validates form fields and provides voice feedback
+   */
+  const validateAndSpeak = (): boolean => {
+    if (!guestName || !guestPhone || !guestEmail) {
+      speak('Please put in your required info');
+      return false;
+    }
+    if (isScheduled && !scheduledTime) {
+      speak('Please put in your required info');
+      return false;
+    }
+    if (paymentMethod === 'card' && (!cardNumber || !cardExpiry || !cardCVV)) {
+      speak('Please put in your required info');
+      return false;
+    }
+    if (paymentMethod === 'jazzcash' && !mobileWallet) {
+      speak('Please put in your required info');
+      return false;
+    }
+
+    // All fields are valid, provide order summary feedback
+    speak(`Please review the rest of the details. Your total is ${total} rupees`);
+    return true;
+  };
 
   const handlePlaceOrder = async () => {
     if (location === "Choose your location" || !location) {
@@ -36,20 +73,9 @@ const Checkout = () => {
       return;
     }
 
-    if (!guestName || !guestPhone || !guestEmail) {
-      toast.error('Please fill in your contact details');
-      return;
-    }
-    if (isScheduled && !scheduledTime) {
-      toast.error('Please select a delivery time');
-      return;
-    }
-    if (paymentMethod === 'card' && (!cardNumber || !cardExpiry || !cardCVV)) {
-      toast.error('Please fill in your card details');
-      return;
-    }
-    if (paymentMethod === 'jazzcash' && !mobileWallet) {
-      toast.error('Please enter your JazzCash/Easypaisa number');
+    // Validate and provide voice feedback
+    if (!validateAndSpeak()) {
+      toast.error('Please fill in all required fields');
       return;
     }
 
@@ -79,6 +105,9 @@ const Checkout = () => {
 
       if (result.success && result.orderId) {
         clearCart();
+        
+        // Announce order success with estimated time
+        speak(`Your order is placed. Estimated time is 30 minutes`);
         
         if (isScheduled) {
           toast.success(`Order scheduled for ${scheduledTime}! We'll deliver at the requested time.`);

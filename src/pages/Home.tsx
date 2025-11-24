@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useApp } from '@/contexts/AppContext';
+import { useVoice } from '@/contexts/VoiceContext';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, MapPin, SlidersHorizontal } from 'lucide-react';
@@ -75,6 +76,7 @@ const restaurants = [
 
 const Home = () => {
   const { location, settings } = useApp();
+  const { speak } = useVoice();
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [showLocationPicker, setShowLocationPicker] = useState(false);
@@ -86,6 +88,12 @@ const Home = () => {
   });
 
   const isLargeText = settings.largeText;
+
+  // Announce restaurant count when page loads
+  useEffect(() => {
+    const openRestaurants = restaurants.filter(r => r.isOpen).length;
+    speak(`${openRestaurants} restaurants available to order from`);
+  }, [speak]);
 
   const filteredRestaurants = restaurants.filter(r => {
     const matchesSearch = r.name.toLowerCase().includes(searchQuery.toLowerCase()) ||

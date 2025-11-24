@@ -1,10 +1,11 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useApp } from '@/contexts/AppContext';
+import { useVoice } from '@/contexts/VoiceContext';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Star, Clock, Bike, Plus, Minus } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CartButton from '@/components/CartButton';
 import { toast } from 'sonner';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -48,6 +49,7 @@ const RestaurantDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart, cart, settings } = useApp();
+  const { speak } = useVoice();
   const { t } = useTranslation();
   const [quantities, setQuantities] = useState<Record<string, number>>({});
 
@@ -55,6 +57,11 @@ const RestaurantDetail = () => {
   const menu = menuItems[id as keyof typeof menuItems] || menuItems['1'];
 
   const isLargeText = settings.largeText;
+
+  // Announce when restaurant detail page loads
+  useEffect(() => {
+    speak(`You are now viewing ${restaurant.name}'s menu`);
+  }, [id, speak, restaurant.name]);
 
   const handleAddToCart = (item: typeof menu[0]) => {
     const qty = quantities[item.id] || 1;
@@ -69,6 +76,7 @@ const RestaurantDetail = () => {
       });
     }
     toast.success(`${qty} x ${item.name} added to cart`);
+    speak(`You have added ${qty} x ${item.name} to cart`);
     setQuantities(prev => ({ ...prev, [item.id]: 1 }));
   };
 

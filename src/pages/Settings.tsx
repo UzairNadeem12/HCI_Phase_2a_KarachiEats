@@ -1,17 +1,19 @@
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '@/contexts/AppContext';
+import { useVoice } from '@/contexts/VoiceContext';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { ArrowLeft, Globe, Type } from 'lucide-react';
+import { ArrowLeft, Globe, Type, Volume2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTranslation } from '@/hooks/useTranslation';
 
 const Settings = () => {
   const navigate = useNavigate();
   const { settings, updateSettings } = useApp();
+  const { isVoiceEnabled, setVoiceEnabled, speak, isSupported } = useVoice();
   const { t } = useTranslation();
 
   const handleLanguageChange = (language: 'en' | 'ur') => {
@@ -22,6 +24,18 @@ const Settings = () => {
   const handleLargeTextToggle = (checked: boolean) => {
     updateSettings({ largeText: checked });
     toast.success(checked ? t('largeTextEnabled') : t('largeTextDisabled'));
+  };
+
+  const handleVoiceToggle = (checked: boolean) => {
+    setVoiceEnabled(checked);
+    if (checked && isSupported) {
+      speak('Voice feedback is now enabled');
+      toast.success(t('voiceFeedbackEnabled') || 'Voice feedback enabled');
+    } else if (checked && !isSupported) {
+      toast.error('Voice feedback is not supported in your browser');
+    } else {
+      toast.success(t('voiceFeedbackDisabled') || 'Voice feedback disabled');
+    }
   };
 
   const isLargeText = settings.largeText;
@@ -70,7 +84,7 @@ const Settings = () => {
             <Type className="w-5 h-5" />
             {t('accessibility')}
           </h2>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mb-6 pb-6 border-b border-border">
             <div className="flex-1">
               <Label htmlFor="large-text" className={`cursor-pointer ${isLargeText ? 'text-lg' : ''}`}>
                 {t('largeTextIcons')}
@@ -85,6 +99,31 @@ const Settings = () => {
               onCheckedChange={handleLargeTextToggle}
             />
           </div>
+
+          {/* Voice Feedback Toggle */}
+          {isSupported && (
+            <div className="flex items-center justify-between">
+              <div className="flex-1">
+                <Label htmlFor="voice-feedback" className={`cursor-pointer flex items-center gap-2 ${isLargeText ? 'text-lg' : ''}`}>
+                  <Volume2 className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'}`} />
+                  {t('voiceFeedback') || 'Voice Feedback'}
+                </Label>
+                <p className={`text-muted-foreground ${isLargeText ? 'text-base' : 'text-sm'} mt-1`}>
+                  {t('voiceFeedbackDescription') || 'Enable text-to-speech announcements for app interactions'}
+                </p>
+              </div>
+              <Switch
+                id="voice-feedback"
+                checked={isVoiceEnabled}
+                onCheckedChange={handleVoiceToggle}
+              />
+            </div>
+          )}
+          {!isSupported && (
+            <p className={`text-amber-600 ${isLargeText ? 'text-base' : 'text-sm'}`}>
+              Voice feedback is not supported in your browser.
+            </p>
+          )}
         </Card>
       </main>
     </div>

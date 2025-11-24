@@ -55,7 +55,7 @@ const Profile = () => {
     };
 
     fetchUserData();
-  }, [userInfo?.email, t]);
+  }, [userInfo?.email]);
 
   const handleSave = async () => {
     if (!userInfo?.email) {

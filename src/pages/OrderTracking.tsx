@@ -32,7 +32,7 @@ const OrderTracking = () => {
       speak(`Your order status is ${allSteps[currentStep].label.toLowerCase()}`);
       setAnnouncedSteps(prev => new Set([...prev, currentStep]));
     }
-  }, [currentStep, announcedSteps, speak, allSteps]);
+  }, [currentStep, announcedSteps, speak, allSteps, t]);
 
   useEffect(() => {
     const interval = setInterval(async () => {

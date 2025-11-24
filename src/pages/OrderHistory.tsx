@@ -46,7 +46,7 @@ const OrderHistory = () => {
     };
 
     fetchOrders();
-  }, [userInfo?.email, t]);
+  }, [userInfo?.email]);
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {

@@ -88,19 +88,20 @@ const Home = () => {
   });
 
   const isLargeText = settings.largeText;
-
-  // Announce restaurant count when page loads
-  useEffect(() => {
-    const openRestaurants = restaurants.filter(r => r.isOpen).length;
-    speak(`${openRestaurants} restaurants available to order from`);
-  }, [speak]);
-
-  // Get translated restaurants
+   // Get translated restaurants
   const restaurants = restaurantsData.map(r => ({
     ...r,
     name: t(r.nameKey),
     cuisine: t(r.cuisineKey),
   }));
+
+  // Announce restaurant count when page loads or restaurants change
+  useEffect(() => {
+    const openRestaurants = restaurants.filter(r => r.isOpen).length;
+    speak(`${openRestaurants} restaurants available to order from`);
+  }, [speak, restaurants]);
+
+ 
 
   const filteredRestaurants = restaurants.filter(r => {
     const matchesSearch = r.name.toLowerCase().includes(searchQuery.toLowerCase()) ||

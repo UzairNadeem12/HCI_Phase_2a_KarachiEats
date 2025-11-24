@@ -72,6 +72,7 @@ export const translations = {
     enterWalletNumber: 'Please enter your JazzCash/Easypaisa number',
     orderScheduled: 'Order scheduled! We\'ll deliver at the requested time.',
     orderSuccess: 'Order placed successfully! Your food is on the way.',
+    orderFailedTryAgain: 'Failed to place order. Please try again.',
     orderFailed: 'Failed to place order',
     
     // Auth
@@ -127,6 +128,7 @@ export const translations = {
     viewOrderHistory: 'View Order History',
     loadingProfile: 'Loading profile...',
     profileUpdated: 'Profile updated successfully!',
+    profileUpdateFailed: 'Failed to update profile',
     
     // Order History
     myOrders: 'Order History',
@@ -143,6 +145,7 @@ export const translations = {
     goToLogin: 'Go to Login',
     location: 'Location',
     paymentLabel: 'Payment',
+    failedToFetchOrderHistory: 'Failed to fetch order history',
 
     // Order Tracking
     orderPlacedSuccessfully: 'Order Placed Successfully!',
@@ -170,6 +173,7 @@ export const translations = {
     pleaseEnterLocation: 'Please enter a location',
     locationSavedSuccessfully: 'Location saved successfully!',
     failedToSaveLocation: 'Failed to save location',
+    pleaseChooseLocation: 'Please choose your location before placing an order.',
     locationUpdated: 'Location updated!',
     
     // Settings
@@ -336,6 +340,7 @@ export const translations = {
     enterWalletNumber: 'براہ کرم اپنا جاز کیش/ایزی پیسہ نمبر درج کریں',
     orderScheduled: 'آرڈر شیڈول ہو گیا! ہم درخواست کردہ وقت پر ڈیلیور کریں گے۔',
     orderSuccess: 'آرڈر کامیابی سے دیا گیا! آپ کا کھانا راستے میں ہے۔',
+    orderFailedTryAgain: 'آرڈر دینے میں ناکامی۔ براہ کرم دوبارہ کوشش کریں.',
     orderFailed: 'آرڈر دینے میں ناکامی',
     
     // Auth
@@ -391,6 +396,7 @@ export const translations = {
     viewOrderHistory: 'آرڈر کی تاریخ دیکھیں',
     loadingProfile: 'پروفائل لوڈ ہو رہی ہے...',
     profileUpdated: 'پروفائل کامیابی سے اپ ڈیٹ ہو گئی!',
+    profileUpdateFailed: 'پروفائل اپ ڈیٹ کرنے میں ناکامی',
     
     // Order History
     myOrders: 'آرڈر کی تاریخ',
@@ -407,6 +413,7 @@ export const translations = {
     goToLogin: 'لاگ ان پر جائیں',
     location: 'مقام',
     paymentLabel: 'ادائیگی',
+    failedToFetchOrderHistory: 'آرڈر کی تاریخ حاصل کرنے میں ناکامی',
 
     // Order Tracking
     orderPlacedSuccessfully: 'آرڈر کامیابی سے دے دیا گیا!',
@@ -434,6 +441,7 @@ export const translations = {
     pleaseEnterLocation: 'براہ کرم کوئی مقام درج کریں',
     locationSavedSuccessfully: 'مقام کامیابی سے محفوظ ہو گیا!',
     failedToSaveLocation: 'مقام محفوظ کرنے میں ناکامی',
+    pleaseChooseLocation: 'آرڈر دینے سے پہلے براہ کرم اپنا مقام منتخب کریں۔',
     locationUpdated: 'مقام اپ ڈیٹ ہو گیا!',
     
     // Settings

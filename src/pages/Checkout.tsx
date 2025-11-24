@@ -12,11 +12,13 @@ import { toast } from 'sonner';
 import { saveOrder } from '@/services/appsScript';
 import { MapPin } from "lucide-react";
 import LocationPicker from '@/components/LocationPicker';
+import { useTranslation } from '@/hooks/useTranslation';
 
 
 const Checkout = () => {
   const navigate = useNavigate();
   const { cart, updateQuantity, removeFromCart, cartTotal, clearCart, settings, userInfo, location } = useApp();
+  const { t } = useTranslation();
   const { speak } = useVoice();
   const [paymentMethod, setPaymentMethod] = useState('cash');
   const [isScheduled, setIsScheduled] = useState(false);
@@ -72,13 +74,13 @@ const Checkout = () => {
   };
   const handlePlaceOrder = async () => {
     if (location === "Choose your location" || !location) {
-      toast.error("Please choose your location before placing an order.");
+      toast.error(t('pleaseChooseLocation'));
       return;
     }
 
     // Validate and provide voice feedback
     if (!validateAndSpeak()) {
-      toast.error('Please fill in all required fields');
+      toast.error(t('pleaseFillAllFields'));
       return;
     }
 
@@ -113,17 +115,17 @@ const Checkout = () => {
         speak(`Your order is placed. Estimated time is 30 minutes`);
         
         if (isScheduled) {
-          toast.success(`Order scheduled for ${scheduledTime}! We'll deliver at the requested time.`);
+          toast.success(t('orderScheduled'));
         } else {
-          toast.success('Order placed successfully! Your food is on the way.');
+          toast.success(t('orderSuccess'));
         }
         
         navigate(`/tracking/${result.orderId}`);
       } else {
-        toast.error(result.error || 'Failed to place order');
+        toast.error(result.error || t('orderFailed'));
       }
     } catch (error) {
-      toast.error('Failed to place order. Please try again.');
+      toast.error(t('orderFailedTryAgain'));
       console.error('Order error:', error);
     } finally {
       setIsProcessing(false);
@@ -135,10 +137,10 @@ const Checkout = () => {
       <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6">
         <div className="text-center space-y-4">
           <h1 className={`font-bold ${isLargeText ? 'text-3xl' : 'text-2xl'}`}>
-            Your cart is empty
+            {t('yourCart')}
           </h1>
           <Button onClick={() => navigate('/home')} size={isLargeText ? "lg" : "default"}>
-            Browse Restaurants
+            {t('browseRestaurants')}
           </Button>
         </div>
       </div>
@@ -158,7 +160,7 @@ const Checkout = () => {
               <MapPin className="w-5 h-5 text-primary" />
               <span className={`font-medium ${isLargeText ? 'text-lg' : 'text-sm'}`}>
                 {location === "" || location === "Choose your location"
-                  ? "Choose your location"
+                  ? t('enterYourLocation')
                   : location}
               </span>
             </button>
@@ -167,7 +169,7 @@ const Checkout = () => {
           {/* Back Button */}
           <Button variant="ghost" onClick={() => navigate(-1)} size={isLargeText ? "lg" : "default"}>
             <ArrowLeft className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />
-            Back
+            {t('back')}
           </Button>
 
         </div>
@@ -176,23 +178,23 @@ const Checkout = () => {
 
       <main className="container mx-auto px-4 py-6 max-w-3xl">
         <h1 className={`font-bold ${isLargeText ? 'text-4xl' : 'text-3xl'} mb-6`}>
-          Checkout
+          {t('checkout')}
         </h1>
 
         {/* Guest Details */}
         <Card className="p-6 mb-6">
           <h2 className={`font-semibold ${isLargeText ? 'text-2xl' : 'text-xl'} mb-4`}>
-            Contact Details
+            {t('contactInfo')}
           </h2>
           <div className="space-y-4">
             <div>
               <Label htmlFor="email" className={`${isLargeText ? 'text-lg' : ''} flex items-center gap-2`}>
-                Email
+                {t('emailLabel')}
               </Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="your@email.com"
+                placeholder={t('emailLabel')}
                 value={guestEmail}
                 onChange={(e) => setGuestEmail(e.target.value)}
                 className={isLargeText ? 'h-14 text-lg mt-2' : 'mt-2'}
@@ -201,11 +203,11 @@ const Checkout = () => {
             <div>
               <Label htmlFor="name" className={`${isLargeText ? 'text-lg' : ''} flex items-center gap-2`}>
                 <User className="w-4 h-4" />
-                Name
+                {t('nameLabel')}
               </Label>
               <Input
                 id="name"
-                placeholder="Your name"
+                placeholder={t('nameLabel')}
                 value={guestName}
                 onChange={(e) => setGuestName(e.target.value)}
                 className={isLargeText ? 'h-14 text-lg mt-2' : 'mt-2'}
@@ -214,11 +216,11 @@ const Checkout = () => {
             <div>
               <Label htmlFor="phone" className={`${isLargeText ? 'text-lg' : ''} flex items-center gap-2`}>
                 <Phone className="w-4 h-4" />
-                Phone Number
+                {t('phoneLabel')}
               </Label>
               <Input
                 id="phone"
-                placeholder="03XX-XXXXXXX"
+                placeholder={t('phoneLabel')}
                 value={guestPhone}
                 onChange={(e) => setGuestPhone(e.target.value)}
                 className={isLargeText ? 'h-14 text-lg mt-2' : 'mt-2'}
@@ -230,7 +232,7 @@ const Checkout = () => {
         {/* Cart Items */}
         <Card className="p-6 mb-6">
           <h2 className={`font-semibold ${isLargeText ? 'text-2xl' : 'text-xl'} mb-4`}>
-            Your Order
+            {t('orderSummary')}
           </h2>
           <div className="space-y-4">
             {cart.map(item => (
@@ -320,22 +322,22 @@ const Checkout = () => {
         <Card className="p-6 mb-6">
           <h2 className={`font-semibold ${isLargeText ? 'text-2xl' : 'text-xl'} mb-4 flex items-center gap-2`}>
             <Clock className="w-5 h-5" />
-            Delivery Time
+            {t('deliveryTime')}
           </h2>
           <RadioGroup value={isScheduled ? 'later' : 'now'} onValueChange={(v) => setIsScheduled(v === 'later')}>
             <div className="flex items-center space-x-2 mb-2">
               <RadioGroupItem value="now" id="now" />
-              <Label htmlFor="now" className={isLargeText ? 'text-lg' : ''}>Deliver Now</Label>
+              <Label htmlFor="now" className={isLargeText ? 'text-lg' : ''}>{t('deliverNow')}</Label>
             </div>
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="later" id="later" />
-              <Label htmlFor="later" className={isLargeText ? 'text-lg' : ''}>Schedule for Later</Label>
+              <Label htmlFor="later" className={isLargeText ? 'text-lg' : ''}>{t('scheduleOrder')}</Label>
             </div>
           </RadioGroup>
           
           {isScheduled && (
             <div className="mt-4">
-              <Label htmlFor="time" className={isLargeText ? 'text-lg' : ''}>Select Time</Label>
+              <Label htmlFor="time" className={isLargeText ? 'text-lg' : ''}>{t('selectTime')}</Label>
               <Input
                 id="time"
                 type="time"
@@ -352,28 +354,28 @@ const Checkout = () => {
         <Card className="p-6 mb-6">
           <h2 className={`font-semibold ${isLargeText ? 'text-2xl' : 'text-xl'} mb-4 flex items-center gap-2`}>
             <Wallet className="w-5 h-5" />
-            Payment Method
+            {t('paymentMethod')}
           </h2>
           <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
             <div className="flex items-center space-x-2 mb-2">
               <RadioGroupItem value="cash" id="cash" />
               <Label htmlFor="cash" className={`${isLargeText ? 'text-lg' : ''} flex items-center gap-2`}>
                 <DollarSign className="w-4 h-4" />
-                Cash on Delivery
+                {t('cashOnDelivery')}
               </Label>
             </div>
             <div className="flex items-center space-x-2 mb-2">
               <RadioGroupItem value="card" id="card" />
               <Label htmlFor="card" className={`${isLargeText ? 'text-lg' : ''} flex items-center gap-2`}>
                 <CreditCard className="w-4 h-4" />
-                Credit/Debit Card
+                {t('cardPayment')}
               </Label>
             </div>
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="jazzcash" id="jazzcash" />
               <Label htmlFor="jazzcash" className={`${isLargeText ? 'text-lg' : ''} flex items-center gap-2`}>
                 <Wallet className="w-4 h-4" />
-                JazzCash/Easypaisa
+                {t('mobileWallet')}
               </Label>
             </div>
           </RadioGroup>
@@ -381,10 +383,10 @@ const Checkout = () => {
           {paymentMethod === 'card' && (
             <div className="mt-6 space-y-4 pt-4 border-t border-border">
               <div>
-                <Label htmlFor="cardNumber" className={isLargeText ? 'text-lg' : ''}>Card Number</Label>
+                <Label htmlFor="cardNumber" className={isLargeText ? 'text-lg' : ''}>{t('cardNumber')}</Label>
                 <Input
                   id="cardNumber"
-                  placeholder="1234 5678 9012 3456"
+                  placeholder={t('cardNumber')}
                   value={cardNumber}
                   onChange={(e) => setCardNumber(e.target.value)}
                   className={isLargeText ? 'h-14 text-lg mt-2' : 'mt-2'}
@@ -393,10 +395,10 @@ const Checkout = () => {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="cardExpiry" className={isLargeText ? 'text-lg' : ''}>Expiry</Label>
+                  <Label htmlFor="cardExpiry" className={isLargeText ? 'text-lg' : ''}>{t('expiryDate')}</Label>
                   <Input
                     id="cardExpiry"
-                    placeholder="MM/YY"
+                    placeholder={t('expiryDate')}
                     value={cardExpiry}
                     onChange={(e) => {
                       let value = e.target.value.replace(/\D/g, ""); 
@@ -412,10 +414,10 @@ const Checkout = () => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="cardCVV" className={isLargeText ? 'text-lg' : ''}>CVV</Label>
+                  <Label htmlFor="cardCVV" className={isLargeText ? 'text-lg' : ''}>{t('cvv')}</Label>
                   <Input
                     id="cardCVV"
-                    placeholder="123"
+                    placeholder={t('cvv')}
                     type="password"
                     value={cardCVV}
                     onChange={(e) => setCardCVV(e.target.value)}
@@ -429,10 +431,10 @@ const Checkout = () => {
 
           {paymentMethod === 'jazzcash' && (
             <div className="mt-6 pt-4 border-t border-border">
-              <Label htmlFor="mobileWallet" className={isLargeText ? 'text-lg' : ''}>JazzCash/Easypaisa Number</Label>
+              <Label htmlFor="mobileWallet" className={isLargeText ? 'text-lg' : ''}>{t('mobileWalletNumber')}</Label>
               <Input
                 id="mobileWallet"
-                placeholder="03XX-XXXXXXX"
+                placeholder={t('mobileWalletNumber')}
                 value={mobileWallet}
                 onChange={(e) => setMobileWallet(e.target.value)}
                 className={isLargeText ? 'h-14 text-lg mt-2' : 'mt-2'}
@@ -444,19 +446,19 @@ const Checkout = () => {
         {/* Order Summary */}
         <Card className="p-6 mb-6 bg-secondary">
           <h2 className={`font-semibold ${isLargeText ? 'text-2xl' : 'text-xl'} mb-4`}>
-            Order Summary
+            {t('orderSummary')}
           </h2>
           <div className="space-y-2">
             <div className="flex justify-between">
-              <span className={isLargeText ? 'text-lg' : ''}>Subtotal</span>
+              <span className={isLargeText ? 'text-lg' : ''}>{t('subtotal')}</span>
               <span className={isLargeText ? 'text-lg' : ''}>Rs. {cartTotal}</span>
             </div>
             <div className="flex justify-between">
-              <span className={isLargeText ? 'text-lg' : ''}>Delivery Fee</span>
+              <span className={isLargeText ? 'text-lg' : ''}>{t('deliveryFee')}</span>
               <span className={isLargeText ? 'text-lg' : ''}>Rs. {deliveryFee}</span>
             </div>
             <div className="flex justify-between font-bold text-primary pt-2 border-t border-border">
-              <span className={isLargeText ? 'text-2xl' : 'text-xl'}>Total</span>
+              <span className={isLargeText ? 'text-2xl' : 'text-xl'}>{t('total')}</span>
               <span className={isLargeText ? 'text-2xl' : 'text-xl'}>Rs. {total}</span>
             </div>
           </div>
@@ -470,7 +472,7 @@ const Checkout = () => {
           className={`w-full ${isLargeText ? 'h-16 text-xl' : 'h-14 text-lg'} flex items-center justify-center gap-2`}
         >
           <ShoppingBag className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'}`} />
-          {isProcessing ? 'Placing Order...' : `Place Order - Rs. ${total}`}
+          {isProcessing ? t('loading') : `${t('placeOrder')} - Rs. ${total}`}
         </Button>
       </main>
       <LocationPicker open={showLocationPicker} onClose={() => setShowLocationPicker(false)} />

@@ -20,10 +20,10 @@ const OrderTracking = () => {
   const isLargeText = settings.largeText;
 
   const allSteps = [
-    { label: 'Order Confirmed', icon: '✓', status: 'confirmed' },
-    { label: 'Preparing Food', icon: '🍳', status: 'preparing' },
-    { label: 'Out for Delivery', icon: '🚴', status: 'out-for-delivery' },
-    { label: 'Delivered', icon: '✅', status: 'delivered' },
+    { label: t('orderConfirmed'), icon: '✓', status: 'confirmed' },
+    { label: t('preparingFood'), icon: '🍳', status: 'preparing' },
+    { label: t('outForDelivery'), icon: '🚴', status: 'out-for-delivery' },
+    { label: t('delivered'), icon: '✅', status: 'delivered' },
   ];
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const OrderTracking = () => {
       speak(`Your order status is ${allSteps[currentStep].label.toLowerCase()}`);
       setAnnouncedSteps(prev => new Set([...prev, currentStep]));
     }
-  }, [currentStep, announcedSteps, speak]);
+  }, [currentStep, announcedSteps, speak, allSteps]);
 
   useEffect(() => {
     const interval = setInterval(async () => {
@@ -59,7 +59,7 @@ const OrderTracking = () => {
     }, 10000); // Change status every 10 seconds
 
     return () => clearInterval(interval);
-  }, [orderId, userInfo?.email]);
+  }, [orderId, userInfo?.email, allSteps]);
 
   const orderSteps = allSteps.map((step, index) => ({
     ...step,

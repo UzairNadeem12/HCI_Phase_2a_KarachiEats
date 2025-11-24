@@ -33,12 +33,12 @@ const OrderHistory = () => {
         if (result.success && result.orders) {
           setOrders(result.orders);
         } else {
-          toast.error(result.error || 'Failed to fetch order history');
+          toast.error(result.error || t('failedToFetchOrderHistory'));
           setOrders([]);
         }
       } catch (error) {
         console.error('Error fetching orders:', error);
-        toast.error('Failed to fetch order history');
+        toast.error(t('failedToFetchOrderHistory'));
         setOrders([]);
       } finally {
         setIsLoading(false);
@@ -46,7 +46,7 @@ const OrderHistory = () => {
     };
 
     fetchOrders();
-  }, [userInfo?.email]);
+  }, [userInfo?.email, t]);
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
@@ -71,18 +71,18 @@ const OrderHistory = () => {
       <div className="min-h-screen bg-background">
         <main className="container mx-auto px-4 py-6 max-w-4xl">
           <h1 className={`font-bold ${isLargeText ? 'text-4xl' : 'text-3xl'} mb-6`}>
-            Order History
+            {t('orderHistory')}
           </h1>
           <Card className="p-12 text-center">
             <Package className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
             <h2 className={`font-semibold ${isLargeText ? 'text-2xl' : 'text-xl'} mb-2`}>
-              Please log in
+              {t('pleaseLogin')}
             </h2>
             <p className={`text-muted-foreground mb-4 ${isLargeText ? 'text-lg' : ''}`}>
-              You need to be logged in to view your order history
+              {t('needLoginForHistory')}
             </p>
             <Button onClick={() => navigate('/auth')} size={isLargeText ? 'lg' : 'default'}>
-              Go to Login
+              {t('goToLogin')}
             </Button>
           </Card>
         </main>
@@ -94,26 +94,26 @@ const OrderHistory = () => {
     <div className="min-h-screen bg-background">
       <main className="container mx-auto px-4 py-6 max-w-4xl">
         <h1 className={`font-bold ${isLargeText ? 'text-4xl' : 'text-3xl'} mb-6`}>
-          Order History
+          {t('orderHistory')}
         </h1>
 
         {isLoading ? (
           <Card className="p-12 text-center">
             <p className={`text-muted-foreground ${isLargeText ? 'text-lg' : ''}`}>
-              Loading your orders...
+              {t('loadingOrders')}
             </p>
           </Card>
         ) : orders.length === 0 ? (
           <Card className="p-12 text-center">
             <Package className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
             <h2 className={`font-semibold ${isLargeText ? 'text-2xl' : 'text-xl'} mb-2`}>
-              No orders yet
+              {t('noOrdersYet')}
             </h2>
             <p className={`text-muted-foreground mb-4 ${isLargeText ? 'text-lg' : ''}`}>
-              Start ordering to see your history here
+              {t('startOrdering')}
             </p>
             <Button onClick={() => navigate('/home')} size={isLargeText ? 'lg' : 'default'}>
-              Browse Restaurants
+              {t('browseRestaurants')}
             </Button>
           </Card>
         ) : (
@@ -123,7 +123,7 @@ const OrderHistory = () => {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                   <div>
                     <h3 className={`font-bold ${isLargeText ? 'text-2xl' : 'text-xl'} mb-1`}>
-                      Order #{order.id}
+                      {t('order')} #{order.id}
                     </h3>
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <Clock className={`${isLargeText ? 'w-5 h-5' : 'w-4 h-4'}`} />
@@ -144,17 +144,17 @@ const OrderHistory = () => {
 
                 <div className="space-y-2 mb-4">
                   <p className={`text-muted-foreground ${isLargeText ? 'text-base' : 'text-sm'}`}>
-                    Location: {order.location}
+                    {t('location')}: {order.location}
                   </p>
                   <p className={isLargeText ? 'text-base' : 'text-sm'}>
-                    <span className="font-medium">Items:</span> {order.items.map(item => `${item.quantity}x ${item.name}`).join(', ')}
+                    <span className="font-medium">{t('items')}:</span> {order.items.map(item => `${item.quantity}x ${item.name}`).join(', ')}
                   </p>
                   <p className={`font-bold text-primary ${isLargeText ? 'text-xl' : 'text-lg'}`}>
-                    Total: Rs. {order.total}
+                    {t('total')}: Rs. {order.total}
                   </p>
                   {order.paymentMethod && (
                     <p className={`text-muted-foreground ${isLargeText ? 'text-base' : 'text-sm'}`}>
-                      Payment: {order.paymentMethod.charAt(0).toUpperCase() + order.paymentMethod.slice(1)}
+                      {t('paymentLabel')}: {order.paymentMethod.charAt(0).toUpperCase() + order.paymentMethod.slice(1)}
                     </p>
                   )}
                 </div>
@@ -167,7 +167,7 @@ const OrderHistory = () => {
                     onClick={() => navigate('/home')}
                   >
                     <RotateCcw className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'}`} />
-                    Reorder
+                    {t('orderAgain')}
                   </Button>
                   <Button
                     variant="outline"
@@ -176,7 +176,7 @@ const OrderHistory = () => {
                     onClick={() => navigate(`/tracking/${order.id}`)}
                   >
                     <FileText className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'}`} />
-                    View Details
+                    {t('viewDetails')}
                   </Button>
                 </div>
               </Card>

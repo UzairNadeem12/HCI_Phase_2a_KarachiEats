@@ -13,35 +13,35 @@ import raitaImg from '@/assets/raita.jpg';
 import naanImg from '@/assets/naan.jpg';
 import garlicBreadImg from '@/assets/garlic-bread.jpg';
 
-// Dummy menu data
-const menuItems = {
+// Dummy menu data with translation keys
+const menuItemsData = {
   '1': [
-    { id: 'm1', name: 'Chicken Biryani', price: 350, image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=400', description: 'Aromatic rice with tender chicken' },
-    { id: 'm2', name: 'Mutton Biryani', price: 450, image: 'https://images.unsplash.com/photo-1599043513900-ed6fe01d3833?w=400', description: 'Rich and flavorful mutton biryani' },
-    { id: 'm3', name: 'Raita', price: 80, image: raitaImg, description: 'Cooling yogurt side dish' },
+    { id: 'm1', nameKey: 'chickenBiryani' as const, descKey: 'chickenBiryaniDesc' as const, price: 350, image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=400' },
+    { id: 'm2', nameKey: 'muttonBiryani' as const, descKey: 'muttonBiryaniDesc' as const, price: 450, image: 'https://images.unsplash.com/photo-1599043513900-ed6fe01d3833?w=400' },
+    { id: 'm3', nameKey: 'raita' as const, descKey: 'raitaDesc' as const, price: 80, image: raitaImg },
   ],
   '2': [
-    { id: 'm4', name: 'Margherita Pizza', price: 600, image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400', description: 'Classic tomato and mozzarella' },
-    { id: 'm5', name: 'Pepperoni Pizza', price: 750, image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?w=400', description: 'Loaded with pepperoni' },
-    { id: 'm6', name: 'Garlic Bread', price: 200, image: garlicBreadImg, description: 'Crispy garlic bread sticks' },
+    { id: 'm4', nameKey: 'margheritaPizza' as const, descKey: 'margheritaPizzaDesc' as const, price: 600, image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400' },
+    { id: 'm5', nameKey: 'pepperoniPizza' as const, descKey: 'pepperoniPizzaDesc' as const, price: 750, image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?w=400' },
+    { id: 'm6', nameKey: 'garlicBread' as const, descKey: 'garlicBreadDesc' as const, price: 200, image: garlicBreadImg },
   ],
   '4': [
-    { id: 'm7', name: 'Seekh Kebab', price: 280, image: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400', description: 'Grilled minced meat skewers' },
-    { id: 'm8', name: 'Chicken Tikka', price: 320, image: 'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?w=400', description: 'Marinated grilled chicken' },
-    { id: 'm9', name: 'Naan', price: 40, image: naanImg, description: 'Fresh tandoor bread' },
+    { id: 'm7', nameKey: 'seekhKebab' as const, descKey: 'seekhKebabDesc' as const, price: 280, image: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400' },
+    { id: 'm8', nameKey: 'chickenTikka' as const, descKey: 'chickenTikkaDesc' as const, price: 320, image: 'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?w=400' },
+    { id: 'm9', nameKey: 'naan' as const, descKey: 'naanDesc' as const, price: 40, image: naanImg },
   ],
   '5': [
-    { id: 'm10', name: 'Classic Burger', price: 350, image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400', description: 'Beef patty with cheese' },
-    { id: 'm11', name: 'Chicken Burger', price: 320, image: 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400', description: 'Crispy chicken burger' },
-    { id: 'm12', name: 'Fries', price: 150, image: 'https://images.unsplash.com/photo-1576107232684-1279f390859f?w=400', description: 'Golden crispy fries' },
+    { id: 'm10', nameKey: 'classicBurger' as const, descKey: 'classicBurgerDesc' as const, price: 350, image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400' },
+    { id: 'm11', nameKey: 'chickenBurger' as const, descKey: 'chickenBurgerDesc' as const, price: 320, image: 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400' },
+    { id: 'm12', nameKey: 'fries' as const, descKey: 'friesDesc' as const, price: 150, image: 'https://images.unsplash.com/photo-1576107232684-1279f390859f?w=400' },
   ],
 };
 
-const restaurantData: Record<string, any> = {
-  '1': { name: 'Biryani House', cuisine: 'Pakistani, Biryani', rating: 4.5, deliveryTime: '25-35', deliveryFee: 50 },
-  '2': { name: 'Pizza Paradise', cuisine: 'Italian, Fast Food', rating: 4.3, deliveryTime: '30-40', deliveryFee: 70 },
-  '4': { name: 'Desi Delights', cuisine: 'Pakistani, BBQ', rating: 4.6, deliveryTime: '35-45', deliveryFee: 60 },
-  '5': { name: 'Burger Barn', cuisine: 'Fast Food, Burgers', rating: 4.2, deliveryTime: '20-30', deliveryFee: 45 },
+const restaurantDataRaw: Record<string, any> = {
+  '1': { nameKey: 'biryaniHouse', cuisineKey: 'cuisinePakistaniBiryani', rating: 4.5, deliveryTime: '25-35', deliveryFee: 50 },
+  '2': { nameKey: 'pizzaParadise', cuisineKey: 'cuisineItalianFastFood', rating: 4.3, deliveryTime: '30-40', deliveryFee: 70 },
+  '4': { nameKey: 'desiDelights', cuisineKey: 'cuisinePakistaniBBQ', rating: 4.6, deliveryTime: '35-45', deliveryFee: 60 },
+  '5': { nameKey: 'burgerBarn', cuisineKey: 'cuisineFastFoodBurgers', rating: 4.2, deliveryTime: '20-30', deliveryFee: 45 },
 };
 
 const RestaurantDetail = () => {
@@ -51,8 +51,19 @@ const RestaurantDetail = () => {
   const { t } = useTranslation();
   const [quantities, setQuantities] = useState<Record<string, number>>({});
 
-  const restaurant = restaurantData[id || '1'];
-  const menu = menuItems[id as keyof typeof menuItems] || menuItems['1'];
+  const restaurantRaw = restaurantDataRaw[id || '1'];
+  const restaurant = {
+    ...restaurantRaw,
+    name: t(restaurantRaw.nameKey as any),
+    cuisine: t(restaurantRaw.cuisineKey as any),
+  };
+  
+  const menuRaw = menuItemsData[id as keyof typeof menuItemsData] || menuItemsData['1'];
+  const menu = menuRaw.map(item => ({
+    ...item,
+    name: t(item.nameKey),
+    description: t(item.descKey),
+  }));
 
   const isLargeText = settings.largeText;
 
@@ -68,7 +79,7 @@ const RestaurantDetail = () => {
         deliveryFee: restaurant.deliveryFee,
       });
     }
-    toast.success(`${qty} x ${item.name} added to cart`);
+    toast.success(`${qty} x ${item.name} ${t('itemAddedToCart')}`);
     setQuantities(prev => ({ ...prev, [item.id]: 1 }));
   };
 
@@ -87,7 +98,7 @@ const RestaurantDetail = () => {
           <div className="flex items-center justify-between">
             <Button variant="ghost" onClick={() => navigate(-1)} size={isLargeText ? "lg" : "default"}>
               <ArrowLeft className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />
-              Back
+              {t('back')}
             </Button>
           </div>
         </div>
@@ -122,7 +133,7 @@ const RestaurantDetail = () => {
       {/* Menu */}
       <main className="container mx-auto px-4 py-6">
         <h2 className={`font-bold ${isLargeText ? 'text-3xl' : 'text-2xl'} mb-6`}>
-          Menu
+          {t('menu')}
         </h2>
         
         <div className="space-y-4">
@@ -172,7 +183,7 @@ const RestaurantDetail = () => {
                     size={isLargeText ? "default" : "default"}
                     className={`${isLargeText ? 'h-12 px-6' : ''} whitespace-nowrap`}
                   >
-                    Add to Cart
+                    {t('addToCart')}
                   </Button>
                 </div>
               </div>

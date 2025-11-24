@@ -122,8 +122,6 @@ const Checkout = () => {
       {/* Header */}
       <header className="bg-card border-b border-border sticky top-0 z-40 shadow-sm">
         <div className="container mx-auto px-4 py-4">
-          
-          {/* Location Selector (same as Home page) */}
           <div className="flex items-center justify-between mb-4">
             <button 
               onClick={() => setShowLocationPicker(true)}

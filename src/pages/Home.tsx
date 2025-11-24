@@ -10,12 +10,12 @@ import LocationPicker from '@/components/LocationPicker';
 import FiltersSheet, { FilterState } from '@/components/FiltersSheet';
 import { useTranslation } from '@/hooks/useTranslation';
 
-// Dummy restaurant data
-const restaurants = [
+// Dummy restaurant data with translation keys
+const restaurantsData = [
   {
     id: '1',
-    name: 'Biryani House',
-    cuisine: 'Pakistani, Biryani',
+    nameKey: 'biryaniHouse' as const,
+    cuisineKey: 'cuisinePakistaniBiryani' as const,
     image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=800',
     rating: 4.5,
     deliveryTime: '25-35',
@@ -24,8 +24,8 @@ const restaurants = [
   },
   {
     id: '2',
-    name: 'Pizza Paradise',
-    cuisine: 'Italian, Fast Food',
+    nameKey: 'pizzaParadise' as const,
+    cuisineKey: 'cuisineItalianFastFood' as const,
     image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800',
     rating: 4.3,
     deliveryTime: '30-40',
@@ -34,8 +34,8 @@ const restaurants = [
   },
   {
     id: '3',
-    name: 'Karachi Café',
-    cuisine: 'Café, Snacks',
+    nameKey: 'karachiCafe' as const,
+    cuisineKey: 'cuisineCafeSnacks' as const,
     image: 'https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=800',
     rating: 4.7,
     deliveryTime: '20-30',
@@ -44,8 +44,8 @@ const restaurants = [
   },
   {
     id: '4',
-    name: 'Desi Delights',
-    cuisine: 'Pakistani, BBQ',
+    nameKey: 'desiDelights' as const,
+    cuisineKey: 'cuisinePakistaniBBQ' as const,
     image: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=800',
     rating: 4.6,
     deliveryTime: '35-45',
@@ -54,8 +54,8 @@ const restaurants = [
   },
   {
     id: '5',
-    name: 'Burger Barn',
-    cuisine: 'Fast Food, Burgers',
+    nameKey: 'burgerBarn' as const,
+    cuisineKey: 'cuisineFastFoodBurgers' as const,
     image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800',
     rating: 4.2,
     deliveryTime: '20-30',
@@ -64,8 +64,8 @@ const restaurants = [
   },
   {
     id: '6',
-    name: 'Sushi Station',
-    cuisine: 'Japanese, Sushi',
+    nameKey: 'sushiStation' as const,
+    cuisineKey: 'cuisineJapaneseSushi' as const,
     image: 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=800',
     rating: 4.8,
     deliveryTime: '40-50',
@@ -94,6 +94,13 @@ const Home = () => {
     const openRestaurants = restaurants.filter(r => r.isOpen).length;
     speak(`${openRestaurants} restaurants available to order from`);
   }, [speak]);
+
+  // Get translated restaurants
+  const restaurants = restaurantsData.map(r => ({
+    ...r,
+    name: t(r.nameKey),
+    cuisine: t(r.cuisineKey),
+  }));
 
   const filteredRestaurants = restaurants.filter(r => {
     const matchesSearch = r.name.toLowerCase().includes(searchQuery.toLowerCase()) ||

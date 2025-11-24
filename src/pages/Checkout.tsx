@@ -10,6 +10,9 @@ import { ArrowLeft, Trash2, Plus, Minus, User, Phone, Clock, CreditCard, Wallet,
 import { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import { saveOrder } from '@/services/appsScript';
+import { MapPin } from "lucide-react";
+import LocationPicker from '@/components/LocationPicker';
+
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -27,6 +30,7 @@ const Checkout = () => {
   const [mobileWallet, setMobileWallet] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const hasAnnouncedWelcome = useRef(false);
+  const [showLocationPicker, setShowLocationPicker] = useState(false);
 
   const isLargeText = settings.largeText;
 
@@ -146,12 +150,29 @@ const Checkout = () => {
       {/* Header */}
       <header className="bg-card border-b border-border sticky top-0 z-40 shadow-sm">
         <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between mb-4">
+            <button 
+              onClick={() => setShowLocationPicker(true)}
+              className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+            >
+              <MapPin className="w-5 h-5 text-primary" />
+              <span className={`font-medium ${isLargeText ? 'text-lg' : 'text-sm'}`}>
+                {location === "" || location === "Choose your location"
+                  ? "Choose your location"
+                  : location}
+              </span>
+            </button>
+          </div>
+
+          {/* Back Button */}
           <Button variant="ghost" onClick={() => navigate(-1)} size={isLargeText ? "lg" : "default"}>
             <ArrowLeft className={`${isLargeText ? 'w-6 h-6' : 'w-5 h-5'} mr-2`} />
             Back
           </Button>
+
         </div>
       </header>
+
 
       <main className="container mx-auto px-4 py-6 max-w-3xl">
         <h1 className={`font-bold ${isLargeText ? 'text-4xl' : 'text-3xl'} mb-6`}>
@@ -452,6 +473,7 @@ const Checkout = () => {
           {isProcessing ? 'Placing Order...' : `Place Order - Rs. ${total}`}
         </Button>
       </main>
+      <LocationPicker open={showLocationPicker} onClose={() => setShowLocationPicker(false)} />
     </div>
   );
 };

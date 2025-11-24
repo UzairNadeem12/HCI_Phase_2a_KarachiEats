@@ -22,6 +22,10 @@ const Onboarding = () => {
             {t('onboardingDescription')}
           </p>
 
+          <p className="text-lg text-muted-foreground max-w-xl mx-auto font-bold">
+            Please open this app in mobile device for the best experience.
+          </p>
+
           <div className="pt-6">
             <Button
               onClick={handleContinue}
@@ -39,6 +43,3 @@ const Onboarding = () => {
 
 
 export default Onboarding;
-
-
-

@@ -13,7 +13,7 @@ export const translations = {
     // Onboarding
     welcomeTo: 'Welcome to',
     appName: 'KarachiEats',
-    onboardingDescription: 'Enjoy fast food delivery, personalized restaurant recommendations, and smooth ordering experience. Please open this app in mobile device for the best experience.',
+    onboardingDescription: 'Enjoy fast food delivery, personalized restaurant recommendations, and smooth ordering experience.',
     
     // Home
     searchPlaceholder: 'Search restaurants or cuisines...',

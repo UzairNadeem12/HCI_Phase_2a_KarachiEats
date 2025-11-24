@@ -210,6 +210,54 @@ export const translations = {
     openOnly: 'Open Only',
     showAll: 'Show All',
     any: 'Any',
+    
+    // Restaurant Names
+    biryaniHouse: 'Biryani House',
+    pizzaParadise: 'Pizza Paradise',
+    karachiCafe: 'Karachi Café',
+    desiDelights: 'Desi Delights',
+    burgerBarn: 'Burger Barn',
+    sushiStation: 'Sushi Station',
+    
+    // Cuisines
+    cuisinePakistaniBiryani: 'Pakistani, Biryani',
+    cuisineItalianFastFood: 'Italian, Fast Food',
+    cuisineCafeSnacks: 'Café, Snacks',
+    cuisinePakistaniBBQ: 'Pakistani, BBQ',
+    cuisineFastFoodBurgers: 'Fast Food, Burgers',
+    cuisineJapaneseSushi: 'Japanese, Sushi',
+    
+    // Menu Items - Restaurant 1
+    chickenBiryani: 'Chicken Biryani',
+    chickenBiryaniDesc: 'Aromatic rice with tender chicken',
+    muttonBiryani: 'Mutton Biryani',
+    muttonBiryaniDesc: 'Rich and flavorful mutton biryani',
+    raita: 'Raita',
+    raitaDesc: 'Cooling yogurt side dish',
+    
+    // Menu Items - Restaurant 2
+    margheritaPizza: 'Margherita Pizza',
+    margheritaPizzaDesc: 'Classic tomato and mozzarella',
+    pepperoniPizza: 'Pepperoni Pizza',
+    pepperoniPizzaDesc: 'Loaded with pepperoni',
+    garlicBread: 'Garlic Bread',
+    garlicBreadDesc: 'Crispy garlic bread sticks',
+    
+    // Menu Items - Restaurant 4
+    seekhKebab: 'Seekh Kebab',
+    seekhKebabDesc: 'Grilled minced meat skewers',
+    chickenTikka: 'Chicken Tikka',
+    chickenTikkaDesc: 'Marinated grilled chicken',
+    naan: 'Naan',
+    naanDesc: 'Fresh tandoor bread',
+    
+    // Menu Items - Restaurant 5
+    classicBurger: 'Classic Burger',
+    classicBurgerDesc: 'Beef patty with cheese',
+    chickenBurger: 'Chicken Burger',
+    chickenBurgerDesc: 'Crispy chicken burger',
+    fries: 'Fries',
+    friesDesc: 'Golden crispy fries',
   },
   ur: {
     // Common
@@ -422,6 +470,54 @@ export const translations = {
     openOnly: 'صرف کھلے',
     showAll: 'تمام دکھائیں',
     any: 'کوئی بھی',
+    
+    // Restaurant Names
+    biryaniHouse: 'بریانی ہاؤس',
+    pizzaParadise: 'پیزا پیراڈائز',
+    karachiCafe: 'کراچی کیفے',
+    desiDelights: 'دیسی ڈیلائٹس',
+    burgerBarn: 'برگر بارن',
+    sushiStation: 'سوشی سٹیشن',
+    
+    // Cuisines
+    cuisinePakistaniBiryani: 'پاکستانی، بریانی',
+    cuisineItalianFastFood: 'اطالوی، فاسٹ فوڈ',
+    cuisineCafeSnacks: 'کیفے، سنیکس',
+    cuisinePakistaniBBQ: 'پاکستانی، بی بی کیو',
+    cuisineFastFoodBurgers: 'فاسٹ فوڈ، برگر',
+    cuisineJapaneseSushi: 'جاپانی، سوشی',
+    
+    // Menu Items - Restaurant 1
+    chickenBiryani: 'چکن بریانی',
+    chickenBiryaniDesc: 'نرم چکن کے ساتھ خوشبودار چاول',
+    muttonBiryani: 'مٹن بریانی',
+    muttonBiryaniDesc: 'بھرپور اور ذائقہ دار مٹن بریانی',
+    raita: 'رائتہ',
+    raitaDesc: 'ٹھنڈا دہی کا سائیڈ ڈش',
+    
+    // Menu Items - Restaurant 2
+    margheritaPizza: 'مارگریٹا پیزا',
+    margheritaPizzaDesc: 'کلاسک ٹماٹر اور موزاریلا',
+    pepperoniPizza: 'پیپرونی پیزا',
+    pepperoniPizzaDesc: 'پیپرونی سے بھرا ہوا',
+    garlicBread: 'گارلک بریڈ',
+    garlicBreadDesc: 'کرکرا لہسن کی بریڈ',
+    
+    // Menu Items - Restaurant 4
+    seekhKebab: 'سیخ کباب',
+    seekhKebabDesc: 'گرل شدہ قیمہ کے کباب',
+    chickenTikka: 'چکن ٹکا',
+    chickenTikkaDesc: 'مصالحے دار گرل شدہ چکن',
+    naan: 'نان',
+    naanDesc: 'تازہ تندور کی روٹی',
+    
+    // Menu Items - Restaurant 5
+    classicBurger: 'کلاسک برگر',
+    classicBurgerDesc: 'پنیر کے ساتھ بیف پیٹی',
+    chickenBurger: 'چکن برگر',
+    chickenBurgerDesc: 'کرسپی چکن برگر',
+    fries: 'فرائز',
+    friesDesc: 'سنہری کرسپی فرائز',
   }
 };
 

@@ -46,19 +46,19 @@ const Checkout = () => {
    */
   const validateAndSpeak = (): boolean => {
     if (!guestName || !guestPhone || !guestEmail) {
-      speak('Please put in your required info');
+      speak('Please fill in your contact details: name, phone, and email');
       return false;
     }
     if (isScheduled && !scheduledTime) {
-      speak('Please put in your required info');
+      speak('Please select a scheduled delivery time');
       return false;
     }
     if (paymentMethod === 'card' && (!cardNumber || !cardExpiry || !cardCVV)) {
-      speak('Please put in your required info');
+      speak('Please complete your card details: card number, expiry date, and CVV');
       return false;
     }
     if (paymentMethod === 'jazzcash' && !mobileWallet) {
-      speak('Please put in your required info');
+      speak('Please enter your JazzCash or Easypaisa number');
       return false;
     }
 
@@ -66,7 +66,6 @@ const Checkout = () => {
     speak(`Please review the rest of the details. Your total is ${total} rupees`);
     return true;
   };
-
   const handlePlaceOrder = async () => {
     if (location === "Choose your location" || !location) {
       toast.error("Please choose your location before placing an order.");

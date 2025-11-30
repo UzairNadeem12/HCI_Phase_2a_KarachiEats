@@ -9,7 +9,8 @@ declare global {
   }
 }
 
-const CLARITY_PROJECT_ID = import.meta.env.VITE_CLARITY_PROJECT_ID 
+const CLARITY_PROJECT_ID = import.meta.env.VITE_CLARITY_PROJECT_ID || "ue77n57yvz";
+
 /**
  * Initialize Microsoft Clarity
  * This should be called early in your app lifecycle

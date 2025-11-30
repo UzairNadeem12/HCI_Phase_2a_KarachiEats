@@ -9,8 +9,6 @@ import { AppProvider } from "./contexts/AppContext";
 import { VoiceProvider } from "./contexts/VoiceContext";
 import { AppSidebar } from "./components/AppSidebar";
 import { initializeClarity } from "./services/clarityService";
-import { initializeBehaviorTracking } from "./services/userBehaviorTracking";
-import TrackingDashboard from "./components/TrackingDashboard";
 import Onboarding from "./pages/Onboarding";
 import Home from "./pages/Home";
 import RestaurantDetail from "./pages/RestaurantDetail";
@@ -29,9 +27,6 @@ const App = () => {
   useEffect(() => {
     // Initialize Clarity on app mount
     initializeClarity();
-    
-    // Initialize user behavior tracking
-    initializeBehaviorTracking();
   }, []);
 
   return (
@@ -46,7 +41,6 @@ const App = () => {
                 <div className="min-h-screen flex w-full">
                   <Routes>
                     <Route path="/" element={<Onboarding />} />
-                    <Route path="/debug/tracking" element={<TrackingDashboard />} />
                     <Route
                       path="/*"
                       element={

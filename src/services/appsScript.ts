@@ -1,4 +1,4 @@
-const APPS_SCRIPT_URL = import.meta.env.VITE_APPS_SCRIPT_URL as string;
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_obN07IS9hP7Ko5rwJ8D2JaVplKe3adudNRcuUn5ESOTaU9nVQFEH5TFgJVAl2QUa4Q/exec";
 
 interface ApiResponse<T = any> {
   success: boolean;

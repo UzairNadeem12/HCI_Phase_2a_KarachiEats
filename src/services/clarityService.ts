@@ -9,7 +9,7 @@ declare global {
   }
 }
 
-const CLARITY_PROJECT_ID = import.meta.env.VITE_CLARITY_PROJECT_ID || "ue77n57yvz";
+const CLARITY_PROJECT_ID = "ue77n57yvz";
 
 /**
  * Initialize Microsoft Clarity
